@@ -17,6 +17,8 @@ import Menu from "~icons/ep/menu";
 import AddFill from "~icons/ri/add-circle-line";
 import Close from "~icons/ep/close";
 import Check from "~icons/ep/check";
+import { ElMessageBox } from "element-plus";
+import { deleteEmployeeApi } from "@/api/user";
 
 defineOptions({
   name: "Store"
@@ -62,6 +64,9 @@ const {
   resetForm,
   openDialog,
   openDialogOne,
+  openDialogTwo,
+  openDialogThree,
+  deleteEmployee,
   handleSave,
   filterMethod,
   transformI18n,
@@ -162,21 +167,45 @@ onMounted(() => {
                 link
                 type="primary"
                 size="default"
+                @click="openDialogOne(row)"
+              >
+                重置密码
+              </el-button>
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                size="default"
+                @click="openDialogTwo(row)"
+              >
+                修改手机号
+              </el-button>
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                size="default"
+                @click="openDialogThree(row)"
+              >
+                修改邮箱
+              </el-button>
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                size="default"
                 @click="openDialog('修改', row)"
               >
-                编辑
+                修改
               </el-button>
-              <!-- <el-button class="reset-margin" link type="primary" :size="size">
-                修改密码
-              </el-button> -->
               <el-button
                 class="reset-margin"
                 link
                 type="primary"
                 :size="size"
-                @click="openDialogOne(row)"
+                @click="deleteEmployee(row)"
               >
-                临时密码
+                删除
               </el-button>
             </template>
           </pure-table>

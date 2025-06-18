@@ -67,24 +67,6 @@ defineExpose({ getRef });
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-form-item label="电话" prop="mobile">
-          <el-input
-            v-model="newFormInline.mobile"
-            clearable
-            placeholder="请输入电话"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="邮箱" prop="email">
-          <el-input
-            v-model="newFormInline.email"
-            clearable
-            placeholder="请输入邮箱"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
         <el-form-item label="密码" prop="password">
           <el-input
             v-model="newFormInline.password"

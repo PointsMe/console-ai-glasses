@@ -1,9 +1,12 @@
 import dayjs from "dayjs";
 import editForm from "../form.vue";
-import passwordForm from "../passwordForm.vue";
+import resetPasswordForm from "../resetPasswordForm.vue";
+import resetMobileForm from "../reseMobildeForm.vue";
+import resetEmailForm from "../resetEmailForm.vue";
 import { message } from "@/utils/message";
 import { transformI18n } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
+import { ElMessageBox } from "element-plus";
 // import type { FormItemProps } from "../utils/types";
 import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection } from "@pureadmin/utils";
@@ -11,7 +14,11 @@ import {
   getEmployeeList,
   addEmployeeApi,
   getEmployeeDetailApi,
-  updateEmployeeApi
+  updateEmployeeApi,
+  resetPasswordApi,
+  resetMobileApi,
+  resetEmailApi,
+  deleteEmployeeApi
 } from "@/api/user";
 import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
 
@@ -36,10 +43,6 @@ export function useRole(treeRef: Ref) {
     background: true
   });
   const columns: TableColumnList = [
-    // {
-    //   label: "角色编号",
-    //   prop: "id"
-    // },
     {
       label: "员工姓名",
       prop: "username"
@@ -70,7 +73,7 @@ export function useRole(treeRef: Ref) {
     {
       label: "操作",
       fixed: "right",
-      width: 210,
+      width: 350,
       slot: "operation"
     }
   ];
@@ -114,38 +117,44 @@ export function useRole(treeRef: Ref) {
     onSearch();
   };
   function openDialogOne(row?: any) {
-    console.log("openDialog==>", row);
-    const params = new FormData();
-    params.append("id", row?.id);
-    getEmployeeDetailApi(params).then(res => {
-      if (res && res.data) {
-        const { data } = res;
-        addDialog({
-          title: `临时密码`,
-          props: {
-            formInline: {
-              username: data ? data?.username : "",
-              email: data ? data?.email : "",
-              shopId: data ? data?.shops[0]?.id : "",
-              mobile: data ? data?.mobile : ""
-            }
-          },
-          width: "40%",
-          draggable: true,
-          fullscreen: deviceDetection(),
-          fullscreenIcon: true,
-          closeOnClickModal: false,
-          contentRenderer: () =>
-            h(passwordForm, { ref: formRef, formInline: null }),
-          beforeSure: (done, { options }) => {
-            // const FormRef = formRef.value.getRef();
-            // const curData = options.props.formInline;
-            console.log(options);
-            function chores() {
-              done(); // 关闭弹框
-              onSearch(); // 刷新表格数据
-            }
-            chores();
+    console.log("openDialogOne==>", row);
+    addDialog({
+      title: `重置密码`,
+      props: {
+        formInline: {
+          id: row?.id
+        }
+      },
+      width: "25%",
+      draggable: true,
+      fullscreen: deviceDetection(),
+      fullscreenIcon: true,
+      closeOnClickModal: false,
+      contentRenderer: () =>
+        h(resetPasswordForm, { ref: formRef, formInline: null }),
+      beforeSure: (done, { options }) => {
+        const FormRef = formRef.value.getRef();
+        const curData = options.props.formInline;
+        console.log(options);
+        function chores() {
+          message(`员工名称为${row?.username}的密码重置成功`, {
+            type: "success"
+          });
+          done(); // 关闭弹框
+          onSearch(); // 刷新表格数据
+        }
+        FormRef.validate(valid => {
+          if (valid) {
+            console.log("curData", curData);
+            // 表单规则校验通过
+            resetPasswordApi({
+              id: row?.id,
+              password: curData.password
+            }).then(res_2 => {
+              if (res_2) {
+                chores();
+              }
+            });
           }
         });
       }
@@ -164,7 +173,7 @@ export function useRole(treeRef: Ref) {
             mobile: data ? data?.mobile : ""
           }
         },
-        width: "40%",
+        width: "25%",
         draggable: true,
         fullscreen: deviceDetection(),
         fullscreenIcon: true,
@@ -237,6 +246,121 @@ export function useRole(treeRef: Ref) {
     }
   }
 
+  function openDialogTwo(row?: any) {
+    console.log("openDialogTwo==>", row);
+    addDialog({
+      title: `修改手机号`,
+      props: {
+        formInline: {
+          id: row?.id
+        }
+      },
+      width: "25%",
+      draggable: true,
+      fullscreen: deviceDetection(),
+      fullscreenIcon: true,
+      closeOnClickModal: false,
+      contentRenderer: () =>
+        h(resetMobileForm, { ref: formRef, formInline: null }),
+      beforeSure: (done, { options }) => {
+        const FormRef = formRef.value.getRef();
+        const curData = options.props.formInline;
+        console.log(options);
+        function chores() {
+          message(`员工名称为${row?.username}的手机号修改成功`, {
+            type: "success"
+          });
+          done(); // 关闭弹框
+          onSearch(); // 刷新表格数据
+        }
+        FormRef.validate(valid => {
+          if (valid) {
+            console.log("curData", curData);
+            // 表单规则校验通过
+            resetMobileApi({
+              id: row?.id,
+              mobile: curData.mobile
+            }).then(res_2 => {
+              if (res_2) {
+                chores();
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+  function openDialogThree(row?: any) {
+    console.log("openDialogThree==>", row);
+    addDialog({
+      title: `修改邮箱`,
+      props: {
+        formInline: {
+          id: row?.id
+        }
+      },
+      width: "25%",
+      draggable: true,
+      fullscreen: deviceDetection(),
+      fullscreenIcon: true,
+      closeOnClickModal: false,
+      contentRenderer: () =>
+        h(resetEmailForm, { ref: formRef, formInline: null }),
+      beforeSure: (done, { options }) => {
+        const FormRef = formRef.value.getRef();
+        const curData = options.props.formInline;
+        console.log(options);
+        function chores() {
+          message(`员工名称为${row?.username}的邮箱修改成功`, {
+            type: "success"
+          });
+          done(); // 关闭弹框
+          onSearch(); // 刷新表格数据
+        }
+        FormRef.validate(valid => {
+          if (valid) {
+            console.log("curData", curData);
+            // 表单规则校验通过
+            resetEmailApi({
+              id: row?.id,
+              email: curData.email
+            }).then(res_2 => {
+              if (res_2) {
+                chores();
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+  const deleteEmployee = (row: any) => {
+    console.log(row);
+    ElMessageBox.confirm(
+      `确认要<strong>删除</strong><strong style='color:var(--el-color-primary)'>${row.username}</strong>吗?`,
+      "系统提示",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        dangerouslyUseHTMLString: true,
+        draggable: true
+      }
+    )
+      .then(() => {
+        deleteEmployeeApi({ id: row.id }).then(res => {
+          if (res) {
+            message(`已删除${row.username}`, {
+              type: "success"
+            });
+          }
+        });
+      })
+      .catch(() => {
+        console.log("取消");
+      });
+  };
   /** 高亮当前权限选中行 */
   function rowStyle({ row: { id } }) {
     return {
@@ -287,6 +411,9 @@ export function useRole(treeRef: Ref) {
     resetForm,
     openDialog,
     openDialogOne,
+    openDialogTwo,
+    openDialogThree,
+    deleteEmployee,
     handleSave,
     filterMethod,
     transformI18n,

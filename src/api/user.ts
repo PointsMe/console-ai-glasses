@@ -214,3 +214,51 @@ export const getDisputeDetailApi = (data?: object) => {
     }
   );
 };
+export const resetPasswordApi = (data?: object) => {
+  return http.request<any>(
+    "post",
+    "/employee/password/reset",
+    { data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
+};
+export const resetMobileApi = (data?: object) => {
+  return http.request<any>(
+    "post",
+    "/employee/mobile/update",
+    { data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
+};
+export const resetEmailApi = (data?: object) => {
+  return http.request<any>(
+    "post",
+    "/employee/email/update",
+    { data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
+};
+export const deleteEmployeeApi = (data?: object) => {
+  return http.request<any>(
+    "post",
+    "/employee/delete",
+    { data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
+};
