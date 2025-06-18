@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import editForm from "../form.vue";
+import passwordForm from "../passwordForm.vue";
 import { message } from "@/utils/message";
 import { transformI18n } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
@@ -112,7 +113,44 @@ export function useRole(treeRef: Ref) {
     formEl.resetFields();
     onSearch();
   };
-
+  function openDialogOne(row?: any) {
+    console.log("openDialog==>", row);
+    const params = new FormData();
+    params.append("id", row?.id);
+    getEmployeeDetailApi(params).then(res => {
+      if (res && res.data) {
+        const { data } = res;
+        addDialog({
+          title: `临时密码`,
+          props: {
+            formInline: {
+              username: data ? data?.username : "",
+              email: data ? data?.email : "",
+              shopId: data ? data?.shops[0]?.id : "",
+              mobile: data ? data?.mobile : ""
+            }
+          },
+          width: "40%",
+          draggable: true,
+          fullscreen: deviceDetection(),
+          fullscreenIcon: true,
+          closeOnClickModal: false,
+          contentRenderer: () =>
+            h(passwordForm, { ref: formRef, formInline: null }),
+          beforeSure: (done, { options }) => {
+            // const FormRef = formRef.value.getRef();
+            // const curData = options.props.formInline;
+            console.log(options);
+            function chores() {
+              done(); // 关闭弹框
+              onSearch(); // 刷新表格数据
+            }
+            chores();
+          }
+        });
+      }
+    });
+  }
   function openDialog(title = "新增", row?: any) {
     console.log("openDialog==>", row);
     function addLast(data) {
@@ -120,10 +158,10 @@ export function useRole(treeRef: Ref) {
         title: `${title}员工`,
         props: {
           formInline: {
-            username: data?.username ?? "",
-            email: data?.email ?? "",
-            shopId: data?.shops[0]?.id ?? "",
-            mobile: data?.mobile ?? ""
+            username: data ? data?.username : "",
+            email: data ? data?.email : "",
+            shopId: data ? data?.shops[0]?.id : "",
+            mobile: data ? data?.mobile : ""
           }
         },
         width: "40%",
@@ -165,7 +203,7 @@ export function useRole(treeRef: Ref) {
               } else {
                 // 实际开发先调用修改接口，再进行下面操作
                 updateEmployeeApi({
-                  id: data.id,
+                  id: data?.id,
                   scope: 102,
                   username: curData.username,
                   email: curData.email,
@@ -195,7 +233,7 @@ export function useRole(treeRef: Ref) {
         }
       });
     } else {
-      addLast({ shops: [] });
+      addLast(null);
     }
   }
 
@@ -248,6 +286,7 @@ export function useRole(treeRef: Ref) {
     onSearch,
     resetForm,
     openDialog,
+    openDialogOne,
     handleSave,
     filterMethod,
     transformI18n,

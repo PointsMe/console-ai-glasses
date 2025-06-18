@@ -139,6 +139,10 @@ export const addShop = (data?: object) => {
 export const updateShop = (data?: object) => {
   return http.request<any>("post", "/shop/update", { data });
 };
+
+export const selectorShop = (data?: object) => {
+  return http.request<any>("post", "/shop/selector", { data });
+};
 /** 员工列表 */
 export const getEmployeeList = (data?: object) => {
   return http.request<any>("post", "/employee/page", { data });

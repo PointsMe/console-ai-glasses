@@ -61,6 +61,7 @@ const {
   onSearch,
   resetForm,
   openDialog,
+  openDialogOne,
   handleSave,
   filterMethod,
   transformI18n,
@@ -165,10 +166,16 @@ onMounted(() => {
               >
                 编辑
               </el-button>
-              <el-button class="reset-margin" link type="primary" :size="size">
+              <!-- <el-button class="reset-margin" link type="primary" :size="size">
                 修改密码
-              </el-button>
-              <el-button class="reset-margin" link type="primary" :size="size">
+              </el-button> -->
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                :size="size"
+                @click="openDialogOne(row)"
+              >
                 临时密码
               </el-button>
             </template>
