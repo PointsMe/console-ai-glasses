@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import { useRole } from "./utils/hook";
 import { ref, computed, nextTick, onMounted } from "vue";
 import { PureTableBar } from "@/components/RePureTableBar";
@@ -17,7 +18,7 @@ import Menu from "~icons/ep/menu";
 import AddFill from "~icons/ri/add-circle-line";
 import Close from "~icons/ep/close";
 import Check from "~icons/ep/check";
-
+const router = useRouter();
 defineOptions({
   name: "Store"
 });
@@ -70,6 +71,10 @@ const {
   handleCurrentChange,
   handleSelectionChange
 } = useRole(treeRef);
+// const toPageCustemer = (row) => {
+//   router.push("/employee/index");
+//  }
+
 onMounted(() => {
   useResizeObserver(contentRef, async () => {
     await nextTick();
@@ -155,6 +160,35 @@ onMounted(() => {
             @page-size-change="handleSizeChange"
             @page-current-change="handleCurrentChange"
           >
+            <template #errorCount="{ row }">
+              <el-tag
+                size="large"
+                type="danger"
+                @click="
+                  router.push({ name: 'ErrorReport', params: { ...row } })
+                "
+              >
+                {{ row.errorCount }}
+              </el-tag>
+            </template>
+            <template #disputeCount="{ row }">
+              <el-tag
+                size="large"
+                type="success"
+                @click="router.push({ name: 'DeclarationReport', params: row })"
+              >
+                {{ row.disputeCount }}
+              </el-tag>
+            </template>
+            <template #violationCount="{ row }">
+              <el-tag
+                size="large"
+                type="warning"
+                @click="router.push({ name: 'ViolationReport' })"
+              >
+                {{ row.violationCount }}
+              </el-tag>
+            </template>
             <template #operation="{ row }">
               <el-button
                 class="reset-margin"
@@ -165,10 +199,13 @@ onMounted(() => {
               >
                 修改
               </el-button>
-              <el-button class="reset-margin" link type="primary" :size="size">
-                炊具
-              </el-button>
-              <el-button class="reset-margin" link type="primary" :size="size">
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                :size="size"
+                @click="router.push({ name: 'Employee' })"
+              >
                 员工
               </el-button>
             </template>

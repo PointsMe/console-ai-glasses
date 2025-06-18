@@ -19,15 +19,15 @@ export default {
         title: "门店",
         showLink: true
       }
-    },
-    {
-      path: "/store/utensils",
-      name: "Utensils",
-      component: () => import("@/views/store/cookingUtensils/index.vue"),
-      meta: {
-        title: "炊具",
-        showLink: true
-      }
     }
+    // {
+    //   path: "/store/utensils",
+    //   name: "Utensils",
+    //   component: () => import("@/views/store/cookingUtensils/index.vue"),
+    //   meta: {
+    //     title: "炊具",
+    //     showLink: true
+    //   }
+    // }
   ]
 } satisfies RouteConfigsTable;

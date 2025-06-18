@@ -1,16 +1,15 @@
 import dayjs from "dayjs";
 import editForm from "../form.vue";
-import { message } from "@/utils/message";
 import { transformI18n } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
 import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection } from "@pureadmin/utils";
-import { getviolationListApi } from "@/api/user";
+import { getviolationListApi, getViolationDetailApi } from "@/api/user";
 import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
 
 export function useRole(treeRef: Ref) {
   const form = reactive({
-    name: "",
+    shopId: "",
     loginTime: ""
   });
   const curRow = ref();
@@ -31,10 +30,10 @@ export function useRole(treeRef: Ref) {
     //   prop: "id"
     // },
     {
-      label: "商家",
+      label: "门店",
       prop: "shop",
       cellRenderer: ({ row }) => {
-        return h("div", row.shop.merchantName);
+        return h("div", row?.shop?.name);
       }
     },
     {
@@ -137,35 +136,40 @@ export function useRole(treeRef: Ref) {
   };
 
   function openDialog(row?: any) {
-    addDialog({
-      title: ``,
-      props: {
-        formInline: {
-          id: row?.id ?? "",
-          startAt: dayjs(row?.startAt).format("YYYY-MM-DD HH:mm:ss") ?? "",
-          endAt: dayjs(row?.endAt).format("YYYY-MM-DD HH:mm:ss") ?? "",
-          fileUrl: row?.fileUrl ?? "",
-          title: row?.title ?? "",
-          content: row?.content ?? "",
-          shopName: row?.shop?.name ?? "",
-          shopCode: row?.shop?.code ?? "",
-          logoUrl: row?.shop?.logoUrl ?? ""
+    const params = new FormData();
+    params.append("id", row?.id);
+    getViolationDetailApi(params).then(res => {
+      const { data } = res;
+      addDialog({
+        title: ``,
+        props: {
+          formInline: {
+            id: data?.id ?? "",
+            startAt: dayjs(data?.startAt).format("YYYY-MM-DD HH:mm:ss") ?? "",
+            endAt: dayjs(data?.endAt).format("YYYY-MM-DD HH:mm:ss") ?? "",
+            fileUrl: data?.fileUrl ?? "",
+            title: data?.title ?? "",
+            content: data?.content ?? "",
+            shopName: data?.shop?.name ?? "",
+            shopCode: data?.shop?.code ?? "",
+            logoUrl: data?.shop?.logoUrl ?? ""
+          }
+        },
+        width: "45%",
+        draggable: true,
+        fullscreen: deviceDetection(),
+        fullscreenIcon: true,
+        closeOnClickModal: false,
+        contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
+        beforeSure: (done, { options }) => {
+          console.log(options);
+          function chores() {
+            done(); // 关闭弹框
+            // onSearch(); // 刷新表格数据
+          }
+          chores();
         }
-      },
-      width: "45%",
-      draggable: true,
-      fullscreen: deviceDetection(),
-      fullscreenIcon: true,
-      closeOnClickModal: false,
-      contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-      beforeSure: (done, { options }) => {
-        console.log(options);
-        function chores() {
-          done(); // 关闭弹框
-          // onSearch(); // 刷新表格数据
-        }
-        chores();
-      }
+      });
     });
   }
 

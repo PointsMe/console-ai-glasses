@@ -187,3 +187,30 @@ export const getCameraListApi = (data?: object) => {
 export const getviolationListApi = (data?: object) => {
   return http.request<any>("post", "/violation/page", { data });
 };
+export const getDisputeListApi = (data?: object) => {
+  return http.request<any>("post", "/dispute/page", { data });
+};
+export const getViolationDetailApi = (data?: object) => {
+  return http.request<any>(
+    "post",
+    "/violation/detail",
+    { data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
+};
+export const getDisputeDetailApi = (data?: object) => {
+  return http.request<any>(
+    "post",
+    "/dispute/detail",
+    { data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
+};

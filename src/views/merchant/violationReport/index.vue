@@ -4,7 +4,8 @@ import { ref, computed, nextTick, onMounted } from "vue";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { delay, subBefore, useResizeObserver } from "@pureadmin/utils";
-import { getPickerShortcuts } from "./utils";
+import { getPickerShortcuts } from "../utils";
+import { selectorShop } from "@/api/user";
 
 import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
@@ -48,7 +49,6 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleDelete,
   filterMethod,
   transformI18n,
   onQueryChanged,
@@ -56,8 +56,16 @@ const {
   handleCurrentChange,
   handleSelectionChange
 } = useRole(treeRef);
+const shopList = ref([]);
+const getShopList = async () => {
+  const res = await selectorShop({});
+  if (res) {
+    shopList.value = res.data;
+  }
+};
 
 onMounted(() => {
+  getShopList();
   useResizeObserver(contentRef, async () => {
     await nextTick();
     delay(60).then(() => {
@@ -77,13 +85,19 @@ onMounted(() => {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="门店" prop="name">
-        <el-input
-          v-model="form.name"
-          placeholder="请输入门店名称/编号/地址"
-          clearable
-          class="w-[400px]!"
-        />
+      <el-form-item label="" prop="shopId">
+        <el-select
+          v-model="form.shopId"
+          class="w-[380px]!"
+          placeholder="请选择门店"
+        >
+          <el-option
+            v-for="item in shopList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="时间" prop="code">
         <el-date-picker

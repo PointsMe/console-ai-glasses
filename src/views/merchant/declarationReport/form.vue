@@ -1,90 +1,70 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { formRules } from "./utils/rule";
 import { FormProps } from "./utils/types";
+import VideoPage from "@/components/video.vue";
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
-    name: "",
-    code: "",
-    remark: ""
+    id: "",
+    startAt: "",
+    endAt: "",
+    fileUrl: "",
+    title: "",
+    content: "",
+    shopName: "",
+    shopCode: "",
+    logoUrl: ""
   })
 });
-const options = ref([
-  {
-    value: "Option1",
-    label: "Option1"
-  },
-  {
-    value: "Option2",
-    label: "Option2"
-  },
-  {
-    value: "Option3",
-    label: "Option3"
-  },
-  {
-    value: "Option4",
-    label: "Option4"
-  },
-  {
-    value: "Option5",
-    label: "Option5"
-  }
-]);
-const ruleFormRef = ref();
+
 const newFormInline = ref(props.formInline);
-
-function getRef() {
-  return ruleFormRef.value;
-}
-
-defineExpose({ getRef });
 </script>
 
 <template>
-  <el-form
-    ref="ruleFormRef"
-    :model="newFormInline"
-    :rules="formRules"
-    label-width="82px"
-  >
-    <el-form-item label="姓名" prop="name">
-      <el-input
-        v-model="newFormInline.name"
-        clearable
-        placeholder="请输入姓名"
-      />
-    </el-form-item>
-
-    <el-form-item label="手机" prop="code">
-      <el-input
-        v-model="newFormInline.code"
-        clearable
-        placeholder="请输入手机"
-      />
-    </el-form-item>
-    <el-form-item label="邮箱" prop="code">
-      <el-input
-        v-model="newFormInline.code"
-        clearable
-        placeholder="请输入邮箱"
-      />
-    </el-form-item>
-    <el-form-item label="门店">
-      <el-select
-        v-model="newFormInline.remark"
-        multiple
-        placeholder="Select"
-        style="width: 100%"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </el-form-item>
-  </el-form>
+  <div class="content-vio">
+    <el-row>
+      <el-col :span="6">
+        <div class="left-col">
+          <h3>回看视频</h3>
+          <p>
+            {{ newFormInline.startAt }}
+          </p>
+          <p>-</p>
+          <p>
+            {{ newFormInline.endAt }}
+          </p>
+          <h3 class="h3-top">{{ newFormInline.shopName }}</h3>
+          <p>{{ newFormInline.shopCode }}</p>
+          <h3 class="h3-top">{{ newFormInline.title }}</h3>
+          <p>{{ newFormInline.content }}</p>
+        </div>
+      </el-col>
+      <el-col :span="18">
+        <div class="right-col">
+          <VideoPage
+            :form-inline="{
+              fileUrl: newFormInline.fileUrl,
+              logoUrl: newFormInline.logoUrl
+            }"
+          />
+        </div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
+<style scoped lang="scss">
+.content-vio {
+  .el-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .left-col,
+  .right-col {
+    width: 100%;
+    // min-height: 650px;
+    .h3-top {
+      margin-top: 20px;
+    }
+  }
+}
+</style>

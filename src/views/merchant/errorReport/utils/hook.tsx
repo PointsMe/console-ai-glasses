@@ -1,36 +1,23 @@
 import dayjs from "dayjs";
 import editForm from "../form.vue";
-import { handleTree } from "@/utils/tree";
-import { message } from "@/utils/message";
 import { transformI18n } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
-import type { FormItemProps } from "./types";
 import type { PaginationProps } from "@pureadmin/table";
-import { getKeyList, deviceDetection } from "@pureadmin/utils";
-import { getRoleList, getRoleMenu, getRoleMenuIds } from "@/api/system";
-import { type Ref, reactive, ref, onMounted, h, toRaw, watch } from "vue";
+import { deviceDetection } from "@pureadmin/utils";
+import { getDisputeListApi, getDisputeDetailApi } from "@/api/user";
+import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
 
 export function useRole(treeRef: Ref) {
   const form = reactive({
-    name: "",
+    shopId: "",
     loginTime: ""
   });
   const curRow = ref();
   const formRef = ref();
   const dataList = ref([]);
-  const treeIds = ref([]);
-  const treeData = ref([]);
-  const isShow = ref(false);
   const loading = ref(true);
-  const isLinkage = ref(false);
-  const treeSearchValue = ref();
-  const isExpandAll = ref(false);
-  const isSelectAll = ref(false);
-  const treeProps = {
-    value: "id",
-    label: "title",
-    children: "children"
-  };
+  const currentPage = ref(1);
+  const currentSize = ref(10);
   const pagination = reactive<PaginationProps>({
     total: 0,
     pageSize: 10,
@@ -38,49 +25,56 @@ export function useRole(treeRef: Ref) {
     background: true
   });
   const columns: TableColumnList = [
-    // {
-    //   label: "角色编号",
-    //   prop: "id"
-    // },
     {
       label: "商家",
-      prop: "name"
+      prop: "shop",
+      cellRenderer: ({ row }) => {
+        return h("div", row?.shop?.name);
+      }
     },
     {
       label: "地址信息",
-      prop: "code"
+      prop: "shopId",
+      cellRenderer: ({ row }) => {
+        return h("div", row?.shop?.address);
+      }
     },
     {
-      label: "报错时间",
-      prop: "remark",
-      minWidth: 160
+      label: "申报时间",
+      prop: "createdAt",
+      formatter: ({ createdAt }) =>
+        dayjs(createdAt).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       label: "员工编号",
-      prop: "remark",
-      minWidth: 160
+      prop: "employee",
+      cellRenderer: ({ row }) => {
+        return h("div", row.employee.name);
+      }
     },
     {
       label: "违规标题",
-      prop: "remark",
-      minWidth: 160
+      prop: "title"
     },
     {
       label: "违规动作描述",
-      prop: "remark",
-      minWidth: 160
+      prop: "content"
     },
     {
       label: "时间区间",
-      prop: "createTime",
-      minWidth: 160,
-      formatter: ({ createTime }) =>
-        dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+      prop: "startAt",
+      formatter: ({ startAt, endAt }) => {
+        return h(
+          "div",
+          `${dayjs(startAt).format("YYYY-MM-DD HH:mm:ss")} - ${dayjs(
+            endAt
+          ).format("YYYY-MM-DD HH:mm:ss")}`
+        );
+      }
     },
     {
       label: "状态",
-      prop: "remark",
-      minWidth: 160
+      prop: "state"
     },
     {
       label: "操作",
@@ -98,18 +92,16 @@ export function useRole(treeRef: Ref) {
   //     "dark:hover:text-primary!"
   //   ];
   // });
-
-  function handleDelete(row) {
-    message(`您删除了角色名称为${row.name}的这条数据`, { type: "success" });
-    onSearch();
-  }
-
   function handleSizeChange(val: number) {
     console.log(`${val} items per page`);
+    currentSize.value = val;
+    onSearch();
   }
 
   function handleCurrentChange(val: number) {
     console.log(`current page: ${val}`);
+    currentPage.value = val;
+    onSearch();
   }
 
   function handleSelectionChange(val) {
@@ -118,7 +110,12 @@ export function useRole(treeRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getRoleList(toRaw(form));
+    const { data } = await getDisputeListApi({
+      ...toRaw(form),
+      page: currentPage.value,
+      size: currentSize.value,
+      kind: 102
+    });
     dataList.value = data.list;
     pagination.total = data.total;
     pagination.pageSize = data.pageSize;
@@ -135,61 +132,42 @@ export function useRole(treeRef: Ref) {
     onSearch();
   };
 
-  function openDialog(title = "新增", row?: FormItemProps) {
-    addDialog({
-      title: `${title}督导`,
-      props: {
-        formInline: {
-          name: row?.name ?? "",
-          code: row?.code ?? "",
-          remark: row?.remark ?? ""
-        }
-      },
-      width: "40%",
-      draggable: true,
-      fullscreen: deviceDetection(),
-      fullscreenIcon: true,
-      closeOnClickModal: false,
-      contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-      beforeSure: (done, { options }) => {
-        const FormRef = formRef.value.getRef();
-        const curData = options.props.formInline as FormItemProps;
-        function chores() {
-          message(`您${title}了角色名称为${curData.name}的这条数据`, {
-            type: "success"
-          });
-          done(); // 关闭弹框
-          onSearch(); // 刷新表格数据
-        }
-        FormRef.validate(valid => {
-          if (valid) {
-            console.log("curData", curData);
-            // 表单规则校验通过
-            if (title === "新增") {
-              // 实际开发先调用新增接口，再进行下面操作
-              chores();
-            } else {
-              // 实际开发先调用修改接口，再进行下面操作
-              chores();
-            }
+  function openDialog(row?: any) {
+    const params = new FormData();
+    params.append("id", row?.id);
+    getDisputeDetailApi().then(res => {
+      const { data } = res;
+      addDialog({
+        title: ``,
+        props: {
+          formInline: {
+            id: data?.id ?? "",
+            startAt: dayjs(data?.startAt).format("YYYY-MM-DD HH:mm:ss") ?? "",
+            endAt: dayjs(data?.endAt).format("YYYY-MM-DD HH:mm:ss") ?? "",
+            fileUrl: data?.fileUrl ?? "",
+            title: data?.title ?? "",
+            content: data?.content ?? "",
+            shopName: data?.shop?.name ?? "",
+            shopCode: data?.shop?.code ?? "",
+            logoUrl: data?.shop?.logoUrl ?? ""
           }
-        });
-      }
+        },
+        width: "45%",
+        draggable: true,
+        fullscreen: deviceDetection(),
+        fullscreenIcon: true,
+        closeOnClickModal: false,
+        contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
+        beforeSure: (done, { options }) => {
+          console.log(options);
+          function chores() {
+            done(); // 关闭弹框
+            // onSearch(); // 刷新表格数据
+          }
+          chores();
+        }
+      });
     });
-  }
-
-  /** 菜单权限 */
-  async function handleMenu(row?: any) {
-    const { id } = row;
-    if (id) {
-      curRow.value = row;
-      isShow.value = true;
-      const { data } = await getRoleMenuIds({ id });
-      treeRef.value.setCheckedKeys(data);
-    } else {
-      curRow.value = null;
-      isShow.value = false;
-    }
   }
 
   /** 高亮当前权限选中行 */
@@ -198,16 +176,6 @@ export function useRole(treeRef: Ref) {
       cursor: "pointer",
       background: id === curRow.value?.id ? "var(--el-fill-color-light)" : ""
     };
-  }
-
-  /** 菜单权限-保存 */
-  function handleSave() {
-    const { id, name } = curRow.value;
-    // 根据用户 id 调用实际项目中菜单权限修改接口
-    console.log(id, treeRef.value.getCheckedKeys());
-    message(`角色名称为${name}的菜单权限修改成功`, {
-      type: "success"
-    });
   }
 
   /** 数据权限 可自行开发 */
@@ -223,45 +191,19 @@ export function useRole(treeRef: Ref) {
 
   onMounted(async () => {
     onSearch();
-    const { data } = await getRoleMenu();
-    treeIds.value = getKeyList(data, "id");
-    treeData.value = handleTree(data);
-  });
-
-  watch(isExpandAll, val => {
-    val
-      ? treeRef.value.setExpandedKeys(treeIds.value)
-      : treeRef.value.setExpandedKeys([]);
-  });
-
-  watch(isSelectAll, val => {
-    val
-      ? treeRef.value.setCheckedKeys(treeIds.value)
-      : treeRef.value.setCheckedKeys([]);
   });
 
   return {
     form,
-    isShow,
     curRow,
     loading,
     columns,
     rowStyle,
     dataList,
-    treeData,
-    treeProps,
-    isLinkage,
     pagination,
-    isExpandAll,
-    isSelectAll,
-    treeSearchValue,
-    // buttonClass,
     onSearch,
     resetForm,
     openDialog,
-    handleMenu,
-    handleSave,
-    handleDelete,
     filterMethod,
     transformI18n,
     onQueryChanged,

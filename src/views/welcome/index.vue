@@ -3,9 +3,11 @@ import dayjs from "dayjs";
 import { getMerchantDetail, MerchantDetailResult } from "@/api/user";
 import pieChart from "./pieChart.vue";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 defineOptions({
   name: "User"
 });
+const router = useRouter();
 const value = ref("");
 const options = [
   {
@@ -73,10 +75,19 @@ onMounted(() => {
         </el-col>
         <el-col :span="6">
           <div>
-            <el-button type="primary" class="mr-4" size="small">门店</el-button>
-            <el-button type="primary" class="mr-4" size="small">督导</el-button>
-            <el-button type="primary" class="mr-4" size="small"
-              >账号管理</el-button
+            <el-button
+              type="primary"
+              class="mr-4"
+              size="small"
+              @click="router.push({ name: 'Store' })"
+              >门店</el-button
+            >
+            <el-button
+              type="primary"
+              class="mr-4"
+              size="small"
+              @click="router.push({ name: 'Merchant' })"
+              >督导</el-button
             >
           </div>
         </el-col>

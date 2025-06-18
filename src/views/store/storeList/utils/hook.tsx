@@ -46,15 +46,18 @@ export function useRole(treeRef: Ref) {
     },
     {
       label: "报错次数",
-      prop: "errorCount"
+      prop: "errorCount",
+      slot: "errorCount"
     },
     {
       label: "申报次数",
-      prop: "disputeCount"
+      prop: "disputeCount",
+      slot: "disputeCount"
     },
     {
       label: "违规次数",
-      prop: "violationCount"
+      prop: "violationCount",
+      slot: "violationCount"
     },
     {
       label: "地址信息",
