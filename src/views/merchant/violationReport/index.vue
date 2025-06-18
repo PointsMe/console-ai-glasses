@@ -6,15 +6,9 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { delay, subBefore, useResizeObserver } from "@pureadmin/utils";
 import { getPickerShortcuts } from "./utils";
 
-// import Database from "~icons/ri/database-2-line";
-// import More from "~icons/ep/more-filled";
-import Delete from "~icons/ep/delete";
 import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
-import Menu from "~icons/ep/menu";
-import AddFill from "~icons/ri/add-circle-line";
-import Close from "~icons/ep/close";
-import Check from "~icons/ep/check";
+import View from "~icons/ep/view";
 
 defineOptions({
   name: "ErrorReport"
@@ -45,29 +39,19 @@ const treeHeight = ref();
 
 const {
   form,
-  curRow,
   loading,
   columns,
   rowStyle,
   dataList,
-  treeData,
-  treeProps,
-  isLinkage,
   pagination,
-  isExpandAll,
-  isSelectAll,
-  treeSearchValue,
   // buttonClass,
   onSearch,
   resetForm,
   openDialog,
-  handleMenu,
-  handleSave,
   handleDelete,
   filterMethod,
   transformI18n,
   onQueryChanged,
-  // handleDatabase,
   handleSizeChange,
   handleCurrentChange,
   handleSelectionChange
@@ -163,8 +147,8 @@ onMounted(() => {
                 link
                 type="primary"
                 :size="size"
-                :icon="useRenderIcon(EditPen)"
-                @click="openDialog('修改', row)"
+                :icon="useRenderIcon(View)"
+                @click="openDialog(row)"
               >
                 回看视频
               </el-button>
