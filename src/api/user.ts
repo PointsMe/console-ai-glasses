@@ -181,3 +181,6 @@ export const getShopDetailApi = (data?: object) => {
     }
   );
 };
+export const getCameraListApi = (data?: object) => {
+  return http.request<any>("post", "/device/camera/page", { data });
+};
