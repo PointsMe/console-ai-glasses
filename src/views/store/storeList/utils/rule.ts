@@ -7,8 +7,9 @@ export const formRules = reactive(<FormRules>{
   name: [{ required: true, message: "此项为必填项", trigger: "blur" }],
   countryId: [{ required: true, message: "此项为必填项", trigger: "blur" }],
   provinceId: [{ required: true, message: "此项为必填项", trigger: "change" }],
-  city: [{ required: true, message: "此项为必填项", trigger: "change" }],
+  city: [{ required: true, message: "此项为必填项", trigger: "blur" }],
   address: [{ required: true, message: "此项为必填项", trigger: "blur" }],
   contactName: [{ required: true, message: "此项为必填项", trigger: "blur" }],
-  contactPhone: [{ required: true, message: "此项为必填项", trigger: "blur" }]
+  contactPhone: [{ required: true, message: "此项为必填项", trigger: "blur" }],
+  zipcode: [{ required: true, message: "此项为必填项", trigger: "blur" }]
 });

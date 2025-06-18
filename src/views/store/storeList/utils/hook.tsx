@@ -6,7 +6,13 @@ import { addDialog } from "@/components/ReDialog";
 // import type { FormItemProps } from "../utils/types";
 import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection } from "@pureadmin/utils";
-import { getShopList, addShop, getMerchantDetail } from "@/api/user";
+import {
+  getShopList,
+  addShop,
+  getShopDetailApi,
+  getMerchantDetail,
+  updateShop
+} from "@/api/user";
 import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
 
 export function useRole(treeRef: Ref) {
@@ -118,77 +124,87 @@ export function useRole(treeRef: Ref) {
     formEl.resetFields();
     onSearch();
   };
-  const addStore = async (params: any) => {
-    const res = await addShop(params);
-    return res;
-  };
-  const getMerchantDetailFn = async () => {
-    const { data } = await getMerchantDetail();
-    console.log("getMerchantDetailFn==>", data);
-    return data.company;
-  };
-  function openDialog(title = "新增", row?: any) {
-    getMerchantDetailFn().then(res => {
-      addDialog({
-        title: `${title}门店`,
-        props: {
-          formInline: {
-            name: row?.name ?? "",
-            code: row?.code ?? "",
-            countryId: row?.countryId ?? "",
-            provinceId: row?.provinceId ?? "",
-            city: row?.city ?? "",
-            address: row?.address ?? "",
-            contactName: row?.contactName ?? "",
-            contactPhone: row?.contactPhone ?? ""
-          }
-        },
-        width: "40%",
-        draggable: true,
-        fullscreen: deviceDetection(),
-        fullscreenIcon: true,
-        closeOnClickModal: false,
-        contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-        beforeSure: (done, { options }) => {
-          const FormRef = formRef.value.getRef();
-          const curData = options.props.formInline;
-          function chores() {
-            message(`您${title}了门店名称为${curData.name}的这条数据`, {
-              type: "success"
-            });
-            done(); // 关闭弹框
-            onSearch(); // 刷新表格数据
-          }
-          FormRef.validate(valid => {
-            if (valid) {
-              console.log("curData", curData);
-              // 表单规则校验通过
-              if (title === "新增") {
-                // 实际开发先调用新增接口，再进行下面操作
-                addStore({
-                  name: curData.name,
-                  company: {
-                    ...res
-                  },
-                  address: {
-                    countryId: curData.countryId,
-                    provinceId: curData.provinceId,
-                    city: curData.city,
-                    address: curData.address,
-                    contactName: curData.contactName,
-                    contactPhone: curData.contactPhone
-                  }
-                }).then(() => {
-                  chores();
-                });
-              } else {
-                // 实际开发先调用修改接口，再进行下面操作
-                chores();
-              }
-            }
-          });
+  async function openDialog(title = "新增", row?: any) {
+    let res = null;
+    if (row) {
+      const params = new FormData();
+      params.append("id", row?.id);
+      res = await getShopDetailApi(params);
+    } else {
+      res = await getMerchantDetail();
+    }
+    console.log("res==>", res);
+    const { data } = res;
+    addDialog({
+      title: `${title}门店`,
+      props: {
+        formInline: {
+          name: row ? data?.name : "",
+          code: row ? data?.code : "",
+          countryId: row ? data?.address?.country?.id : "",
+          provinceId: row ? data?.address?.province?.id : "",
+          city: row ? data?.address?.city : "",
+          address: row ? data?.address?.address : "",
+          contactName: row ? data?.address?.contactName : "",
+          contactPhone: row ? data?.address?.contactPhone : "",
+          zipcode: row ? data?.address?.zipcode : ""
         }
-      });
+      },
+      width: "40%",
+      draggable: true,
+      fullscreen: deviceDetection(),
+      fullscreenIcon: true,
+      closeOnClickModal: false,
+      contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
+      beforeSure: (done, { options }) => {
+        const FormRef = formRef.value.getRef();
+        const curData = options.props.formInline;
+        function chores() {
+          message(`您${title}了门店名称为${curData.name}的这条数据`, {
+            type: "success"
+          });
+          done(); // 关闭弹框
+          onSearch(); // 刷新表格数据
+        }
+        FormRef.validate(valid => {
+          if (valid) {
+            console.log("curData", curData);
+            // 表单规则校验通过
+            if (title === "新增") {
+              // 实际开发先调用新增接口，再进行下面操作
+              addShop({
+                name: curData.name,
+                company: {
+                  ...data?.company,
+                  countryId: data?.company?.country?.id,
+                  provinceId: data?.company?.province?.id
+                },
+                address: {
+                  ...curData
+                }
+              }).then(() => {
+                chores();
+              });
+            } else {
+              // 实际开发先调用修改接口，再进行下面操作
+              updateShop({
+                id: data?.id,
+                name: curData.name,
+                company: {
+                  ...data?.company,
+                  countryId: data?.company?.country?.id,
+                  provinceId: data?.company?.province?.id
+                },
+                address: {
+                  ...curData
+                }
+              }).then(() => {
+                chores();
+              });
+            }
+          }
+        });
+      }
     });
   }
 

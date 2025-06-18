@@ -135,7 +135,10 @@ export const getCityListApi = (data: any) => {
 export const addShop = (data?: object) => {
   return http.request<any>("post", "/shop/create", { data });
 };
-
+/** 修改门店 */
+export const updateShop = (data?: object) => {
+  return http.request<any>("post", "/shop/update", { data });
+};
 /** 员工列表 */
 export const getEmployeeList = (data?: object) => {
   return http.request<any>("post", "/employee/page", { data });
@@ -161,4 +164,16 @@ export const getEmployeeDetailApi = (data?: object) => {
 /** 新增列表 */
 export const updateEmployeeApi = (data?: object) => {
   return http.request<any>("post", "/employee/update", { data });
+};
+export const getShopDetailApi = (data?: object) => {
+  return http.request<any>(
+    "post",
+    "/shop/detail",
+    { data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
 };

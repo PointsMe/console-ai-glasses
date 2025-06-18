@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import { getMerchantDetail } from "@/api/user";
 import { ref, onMounted } from "vue";
 import { formRules } from "./utils/rule";
 import { FormProps } from "./utils/types";
-import {
-  getCountryListApi,
-  getCityListApi,
-  getProvinceListApi
-} from "@/api/user";
+import { getCountryListApi, getProvinceListApi } from "@/api/user";
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
@@ -18,12 +13,12 @@ const props = withDefaults(defineProps<FormProps>(), {
     city: "",
     address: "",
     contactName: "",
-    contactPhone: ""
+    contactPhone: "",
+    zipcode: ""
   })
 });
 const countryList = ref([]);
 const provinceList = ref([]);
-const cityList = ref([]);
 const ruleFormRef = ref();
 const newFormInline = ref(props.formInline);
 
@@ -37,26 +32,15 @@ const getCountryList = async () => {
   }
 };
 const changeCountry = (e: string) => {
-  cityList.value = [];
   getProvinceList(e);
 };
-const changeProvince = (e: string) => {
-  getCityList(e);
-};
+
 const getProvinceList = async (id: string) => {
   const params = new FormData();
   params.append("countryId", id);
   const res = await getProvinceListApi(params);
   if (res) {
     provinceList.value = res.data;
-  }
-};
-const getCityList = async (id: string) => {
-  const params = new FormData();
-  params.append("provinceId", id);
-  const res = await getCityListApi(params);
-  if (res) {
-    cityList.value = res.data;
   }
 };
 
@@ -77,7 +61,7 @@ defineExpose({ getRef });
       <el-col :span="24">
         <el-form-item label="编号" prop="code">
           <el-input
-            v-model="newFormInline.name"
+            v-model="newFormInline.code"
             clearable
             placeholder="请输入编号"
           />
@@ -86,7 +70,7 @@ defineExpose({ getRef });
       <el-col :span="24">
         <el-form-item label="名称" prop="name">
           <el-input
-            v-model="newFormInline.code"
+            v-model="newFormInline.name"
             clearable
             placeholder="请输入名称"
           />
@@ -115,7 +99,6 @@ defineExpose({ getRef });
             v-model="newFormInline.provinceId"
             placeholder="请选择省份"
             clearable
-            @change="changeProvince"
           >
             <el-option
               v-for="item in provinceList"
@@ -128,18 +111,7 @@ defineExpose({ getRef });
       </el-col>
       <el-col :span="8">
         <el-form-item label="城市" prop="city">
-          <el-select
-            v-model="newFormInline.city"
-            placeholder="请选择城市"
-            clearable
-          >
-            <el-option
-              v-for="item in cityList"
-              :key="item.code"
-              :label="item.name"
-              :value="item.code"
-            />
-          </el-select>
+          <el-input v-model="newFormInline.city" placeholder="请输入城市" />
         </el-form-item>
       </el-col>
       <el-col :span="24">
@@ -148,6 +120,15 @@ defineExpose({ getRef });
             v-model="newFormInline.address"
             placeholder="请输入地址"
             type="textarea"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="zipcode" prop="zipcode">
+          <el-input
+            v-model="newFormInline.zipcode"
+            clearable
+            placeholder="请输入zipCode"
           />
         </el-form-item>
       </el-col>
