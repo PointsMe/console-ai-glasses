@@ -3,6 +3,9 @@ import type { FormRules } from "element-plus";
 
 /** 自定义表单规则校验 */
 export const formRules = reactive(<FormRules>{
-  name: [{ required: true, message: "角色名称为必填项", trigger: "blur" }],
-  code: [{ required: true, message: "角色标识为必填项", trigger: "blur" }]
+  username: [{ required: true, message: "此项为必填项", trigger: "blur" }],
+  shopId: [{ required: true, message: "此项为必填项", trigger: "change" }],
+  email: [{ required: true, message: "此项为必填项", trigger: "change" }],
+  mobile: [{ required: true, message: "此项为必填项", trigger: "blur" }],
+  password: [{ required: true, message: "此项为必填项", trigger: "blur" }]
 });

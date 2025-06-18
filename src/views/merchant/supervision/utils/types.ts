@@ -9,7 +9,7 @@ interface FormItemProps {
   remark: string;
 }
 interface FormProps {
-  formInline: FormItemProps;
+  formInline: any;
 }
 
 export type { FormItemProps, FormProps };

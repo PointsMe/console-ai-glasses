@@ -3,10 +3,13 @@ import { useRole } from "./utils/hook";
 import { ref, computed, nextTick, onMounted } from "vue";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { delay, subBefore, useResizeObserver } from "@pureadmin/utils";
+import {
+  delay,
+  subBefore,
+  deviceDetection,
+  useResizeObserver
+} from "@pureadmin/utils";
 
-// import Database from "~icons/ri/database-2-line";
-// import More from "~icons/ep/more-filled";
 import Delete from "~icons/ep/delete";
 import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
@@ -16,7 +19,7 @@ import Close from "~icons/ep/close";
 import Check from "~icons/ep/check";
 
 defineOptions({
-  name: "Merchant"
+  name: "Store"
 });
 
 const iconClass = computed(() => {
@@ -49,8 +52,6 @@ const {
   columns,
   rowStyle,
   dataList,
-  treeData,
-  treeProps,
   isLinkage,
   pagination,
   isExpandAll,
@@ -60,9 +61,8 @@ const {
   onSearch,
   resetForm,
   openDialog,
-  handleMenu,
+  openDialogOne,
   handleSave,
-  handleDelete,
   filterMethod,
   transformI18n,
   onQueryChanged,
@@ -71,7 +71,6 @@ const {
   handleCurrentChange,
   handleSelectionChange
 } = useRole(treeRef);
-
 onMounted(() => {
   useResizeObserver(contentRef, async () => {
     await nextTick();
@@ -92,12 +91,12 @@ onMounted(() => {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="督导" prop="code">
+      <el-form-item label="用户名" prop="username">
         <el-input
-          v-model="form.code"
-          placeholder="请输入门店名称/编号/地址"
+          v-model="form.username"
+          placeholder="请输入用户名"
           clearable
-          class="w-[400px]!"
+          class="w-[180px]!"
         />
       </el-form-item>
       <el-form-item>
@@ -115,7 +114,10 @@ onMounted(() => {
       </el-form-item>
     </el-form>
 
-    <div ref="contentRef" :class="['flex', 'flex-wrap']">
+    <div
+      ref="contentRef"
+      :class="['flex', deviceDetection() ? 'flex-wrap' : '']"
+    >
       <PureTableBar
         :class="'w-full'"
         style="transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1)"
@@ -129,7 +131,7 @@ onMounted(() => {
             :icon="useRenderIcon(AddFill)"
             @click="openDialog()"
           >
-            新增督导
+            新增员工
           </el-button>
         </template>
         <template v-slot="{ size, dynamicColumns }">
@@ -159,37 +161,22 @@ onMounted(() => {
                 class="reset-margin"
                 link
                 type="primary"
-                :size="size"
-                :icon="useRenderIcon(EditPen)"
+                size="default"
                 @click="openDialog('修改', row)"
               >
-                修改
+                编辑
               </el-button>
-              <el-popconfirm
-                :title="`是否确认删除角色名称为${row.name}的这条数据`"
-                @confirm="handleDelete(row)"
-              >
-                <template #reference>
-                  <el-button
-                    class="reset-margin"
-                    link
-                    type="primary"
-                    :size="size"
-                    :icon="useRenderIcon(Delete)"
-                  >
-                    删除
-                  </el-button>
-                </template>
-              </el-popconfirm>
+              <!-- <el-button class="reset-margin" link type="primary" :size="size">
+                修改密码
+              </el-button> -->
               <el-button
                 class="reset-margin"
                 link
                 type="primary"
                 :size="size"
-                :icon="useRenderIcon(Menu)"
-                @click="handleMenu(row)"
+                @click="openDialogOne(row)"
               >
-                权限
+                临时密码
               </el-button>
             </template>
           </pure-table>

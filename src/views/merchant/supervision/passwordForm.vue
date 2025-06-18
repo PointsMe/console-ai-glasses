@@ -46,6 +46,7 @@ defineExpose({ getRef });
           <el-select
             v-model="newFormInline.shopId"
             placeholder="请选择门店名称"
+            disabled
             clearable
           >
             <el-option
@@ -63,6 +64,7 @@ defineExpose({ getRef });
             v-model="newFormInline.username"
             clearable
             placeholder="请输入姓名"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -72,6 +74,7 @@ defineExpose({ getRef });
             v-model="newFormInline.mobile"
             clearable
             placeholder="请输入电话"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -81,16 +84,27 @@ defineExpose({ getRef });
             v-model="newFormInline.email"
             clearable
             placeholder="请输入邮箱"
+            disabled
           />
         </el-form-item>
       </el-col>
-      <el-col :span="24">
+      <!-- <el-col :span="24">
         <el-form-item label="密码" prop="password">
           <el-input
             v-model="newFormInline.password"
             clearable
             placeholder="请输入密码"
             type="password"
+          />
+        </el-form-item>
+      </el-col> -->
+      <el-col :span="24">
+        <el-form-item label="临时密码" prop="nowPassword">
+          <el-input
+            v-model="newFormInline.nowPassword"
+            clearable
+            placeholder="请输入邮箱"
+            disabled
           />
         </el-form-item>
       </el-col>
