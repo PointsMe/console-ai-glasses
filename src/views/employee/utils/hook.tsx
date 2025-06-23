@@ -53,7 +53,10 @@ export function useRole(treeRef: Ref) {
     },
     {
       label: "所属门店",
-      prop: "scope"
+      prop: "shop",
+      cellRenderer: ({ row }) => {
+        return h("div", row?.shops?.map(item => item.name).join(",") || "~");
+      }
     },
     {
       label: "手机",
@@ -170,7 +173,8 @@ export function useRole(treeRef: Ref) {
             username: data ? data?.username : "",
             email: data ? data?.email : "",
             shopId: data ? data?.shops[0]?.id : "",
-            mobile: data ? data?.mobile : ""
+            mobile: data ? data?.mobile : "",
+            id: data ? data?.id : ""
           }
         },
         width: "25%",
@@ -279,7 +283,7 @@ export function useRole(treeRef: Ref) {
             // 表单规则校验通过
             resetMobileApi({
               id: row?.id,
-              mobile: curData.mobile
+              mobile: `${FormRef.mobile_type.replace("+", "")}-${curData.mobile}`
             }).then(res_2 => {
               if (res_2) {
                 chores();
@@ -354,6 +358,7 @@ export function useRole(treeRef: Ref) {
             message(`已删除${row.username}`, {
               type: "success"
             });
+            onSearch(); // 刷新表格数据
           }
         });
       })

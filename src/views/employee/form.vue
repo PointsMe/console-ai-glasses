@@ -66,7 +66,7 @@ defineExpose({ getRef });
           />
         </el-form-item>
       </el-col>
-      <el-col :span="24">
+      <el-col v-if="!newFormInline.id" :span="24">
         <el-form-item label="密码" prop="password">
           <el-input
             v-model="newFormInline.password"

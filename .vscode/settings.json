@@ -1,4 +1,5 @@
 {
+  "editor.fontSize": 16,
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "[vue]": {
