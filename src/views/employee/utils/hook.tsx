@@ -53,7 +53,7 @@ export function useRole(treeRef: Ref) {
     },
     {
       label: "所属门店",
-      prop: "shop",
+      prop: "shops",
       cellRenderer: ({ row }) => {
         return h("div", row?.shops?.map(item => item.name).join(",") || "~");
       }
@@ -172,7 +172,7 @@ export function useRole(treeRef: Ref) {
           formInline: {
             username: data ? data?.username : "",
             email: data ? data?.email : "",
-            shopId: data ? data?.shops[0]?.id : "",
+            shopIds: data ? data?.shops?.map(item => item.id) : "",
             mobile: data ? data?.mobile : "",
             id: data ? data?.id : ""
           }
@@ -205,8 +205,8 @@ export function useRole(treeRef: Ref) {
                   email: curData.email,
                   enabled: true,
                   password: curData.password,
-                  shopIds: [curData.shopId],
-                  mobile: curData.mobile,
+                  shopIds: [curData.shopIds],
+                  mobile: `${FormRef.mobile_type.replace("+", "")}-${curData.mobile}`,
                   kind: 101
                 }).then(res_1 => {
                   if (res_1) {
@@ -221,9 +221,9 @@ export function useRole(treeRef: Ref) {
                   username: curData.username,
                   email: curData.email,
                   enabled: true,
-                  mobile: curData.mobile,
+                  mobile: `${FormRef.mobile_type.replace("+", "")}-${curData.mobile}`,
                   password: curData.password,
-                  shopIds: [curData.shopId],
+                  shopIds: [curData.shopIds],
                   kind: 101
                 }).then(res_2 => {
                   if (res_2) {

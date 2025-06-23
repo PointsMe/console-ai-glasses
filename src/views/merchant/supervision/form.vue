@@ -6,7 +6,7 @@ import { selectorShop } from "@/api/user";
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
-    shopId: "",
+    shopIds: [],
     username: "",
     password: "",
     mobile: "",
@@ -42,9 +42,10 @@ defineExpose({ getRef });
   >
     <el-row>
       <el-col :span="24">
-        <el-form-item label="门店" prop="shopId">
+        <el-form-item label="门店" prop="shopIds">
           <el-select
-            v-model="newFormInline.shopId"
+            v-model="newFormInline.shopIds"
+            multiple
             placeholder="请选择门店名称"
             clearable
           >
@@ -67,11 +68,11 @@ defineExpose({ getRef });
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-form-item label="电话" prop="mobile">
+        <el-form-item label="手机" prop="mobile">
           <el-input
             v-model="newFormInline.mobile"
             clearable
-            placeholder="请输入电话"
+            placeholder="请输入手机"
           />
         </el-form-item>
       </el-col>
@@ -84,7 +85,7 @@ defineExpose({ getRef });
           />
         </el-form-item>
       </el-col>
-      <el-col :span="24">
+      <el-col v-if="!newFormInline.id" :span="24">
         <el-form-item label="密码" prop="password">
           <el-input
             v-model="newFormInline.password"
