@@ -52,8 +52,8 @@ export function useRole(treeRef: Ref) {
     //   prop: "cameraDeviceNumber"
     // },
     {
-      label: "所属门店",
-      prop: "shop",
+      label: "负责门店",
+      prop: "shops",
       cellRenderer: ({ row }) => {
         return h("div", row?.shops?.map(item => item.name).join(",") || "~");
       }
@@ -167,12 +167,12 @@ export function useRole(treeRef: Ref) {
     console.log("openDialog==>", row);
     function addLast(data) {
       addDialog({
-        title: `${title}员工`,
+        title: `${title}督导`,
         props: {
           formInline: {
             username: data ? data?.username : "",
             email: data ? data?.email : "",
-            shopId: data ? data?.shops[0]?.id : "",
+            shopIds: data ? data?.shops?.map(item => item.id) : [],
             mobile: data ? data?.mobile : "",
             id: data ? data?.id : ""
           }
@@ -187,7 +187,7 @@ export function useRole(treeRef: Ref) {
           const FormRef = formRef.value.getRef();
           const curData = options.props.formInline;
           function chores() {
-            message(`您${title}了员工名称为${curData.username}的这条数据`, {
+            message(`您${title}了督导名称为${curData.username}的这条数据`, {
               type: "success"
             });
             done(); // 关闭弹框
@@ -205,9 +205,9 @@ export function useRole(treeRef: Ref) {
                   email: curData.email,
                   enabled: true,
                   password: curData.password,
-                  shopIds: [curData.shopId],
-                  mobile: curData.mobile,
-                  kind: 101
+                  shopIds: curData.shopIds,
+                  mobile: `${FormRef.mobile_type.replace("+", "")}-${curData.mobile}`,
+                  kind: 102
                 }).then(res_1 => {
                   if (res_1) {
                     chores();
@@ -221,10 +221,10 @@ export function useRole(treeRef: Ref) {
                   username: curData.username,
                   email: curData.email,
                   enabled: true,
-                  mobile: curData.mobile,
+                  mobile: `${FormRef.mobile_type.replace("+", "")}-${curData.mobile}`,
                   password: curData.password,
-                  shopIds: [curData.shopId],
-                  kind: 101
+                  shopIds: curData.shopIds,
+                  kind: 102
                 }).then(res_2 => {
                   if (res_2) {
                     chores();

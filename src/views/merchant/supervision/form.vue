@@ -3,23 +3,32 @@ import { ref, onMounted } from "vue";
 import { formRules } from "./utils/rule";
 import { FormProps } from "./utils/types";
 import { selectorShop } from "@/api/user";
+import AllCountryView from "@/components/AllCountryView.vue";
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
-    shopIds: [],
+    shopIds: "",
     username: "",
     password: "",
     mobile: "",
     email: ""
   })
 });
+const mobile_type = ref("+86");
 const shopList = ref([]);
 const ruleFormRef = ref();
 const newFormInline = ref(props.formInline);
 
 function getRef() {
-  return ruleFormRef.value;
+  return {
+    ...ruleFormRef.value,
+    mobile_type: mobile_type.value
+  };
 }
+const changeCountry = (e: string) => {
+  console.log(e);
+  mobile_type.value = e;
+};
 const getCountryList = async () => {
   const res = await selectorShop({});
   if (res) {
@@ -73,7 +82,11 @@ defineExpose({ getRef });
             v-model="newFormInline.mobile"
             clearable
             placeholder="请输入手机"
-          />
+          >
+            <template #prepend>
+              <AllCountryView @changeCountry="changeCountry" />
+            </template>
+          </el-input>
         </el-form-item>
       </el-col>
       <el-col :span="24">
