@@ -1,32 +1,69 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { getMerchantDetail, MerchantDetailResult } from "@/api/user";
+import {
+  getMerchantDetail,
+  MerchantDetailResult,
+  selectorShop,
+  getMerchantLoginLog
+} from "@/api/user";
 import pieChart from "./pieChart.vue";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import listOne from "./listOne.vue";
 import listOneTwo from "./listOneTwo.vue";
 import listOneThree from "./listOneThree.vue";
+import { getPickerShortcuts } from "@/views/merchant/utils";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 defineOptions({
   name: "User"
 });
+import EditPen from "~icons/ep/edit-pen";
+import Refresh from "~icons/ep/refresh";
+import View from "~icons/ep/view";
+const formRef = ref();
 const router = useRouter();
-const value = ref("");
-const options = [
-  {
-    value: "1",
-    label: "Option 1"
-  }
-];
+const form = ref({
+  shopId: "",
+  startTimeArray: [],
+  endTimeArray: []
+  // loginTime: [dayjs().subtract(1, "month").toDate(), dayjs().toDate()]
+});
+const loading = ref(false);
+const shopList = ref([]);
 const dataValue = ref<MerchantDetailResult>();
+const resetForm = formEl => {
+  if (!formEl) return;
+  formEl.resetFields();
+  onSearch();
+};
+const onSearch = () => {
+  console.log("onSearch", form.value);
+};
 const getMerchantDetailFn = async () => {
   const { data } = await getMerchantDetail();
   console.log("getMerchantDetailFn==>", data);
   data.createdAt = dayjs(data.createdAt).format("YYYY-MM-DD HH:mm:ss");
   dataValue.value = data;
 };
+const getShopList = async () => {
+  const { data } = await selectorShop();
+  form.value.shopId = data[0].id;
+  shopList.value = data;
+};
+const getMerchantLoginLogFn = async () => {
+  const { data } = await getMerchantLoginLog({
+    shopId: form.value.shopId,
+    formerStartAt: form.value.startTimeArray[0],
+    formerEndAt: form.value.startTimeArray[1],
+    latterStartAt: form.value.endTimeArray[0],
+    latterEndAt: form.value.endTimeArray[1]
+  });
+  console.log("getMerchantLoginLogFn==>", data);
+};
 onMounted(() => {
-  getMerchantDetailFn();
+  Promise.all([getMerchantDetailFn(), getShopList()]).then(res => {
+    // getMerchantLoginLogFn();
+  });
 });
 </script>
 
@@ -103,20 +140,66 @@ onMounted(() => {
         </el-col>
         <el-col :span="24">
           <div>
-            <span>门店名称：</span>
-            <el-select
-              v-model="value"
-              placeholder="Select"
-              size="default"
-              style="width: 240px"
+            <el-form
+              ref="formRef"
+              :inline="true"
+              :model="form"
+              label-width="40px"
+              class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
             >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+              <el-form-item label="" prop="shopId">
+                <el-select
+                  v-model="form.shopId"
+                  class="w-[380px]!"
+                  placeholder="请选择门店"
+                >
+                  <el-option
+                    v-for="item in shopList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="">
+                <el-date-picker
+                  v-model="form.startTimeArray"
+                  style="width: 100%"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  size="default"
+                />
+              </el-form-item>
+              <el-form-item label="对比">
+                <el-date-picker
+                  v-model="form.endTimeArray"
+                  style="margin-left: 10px"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  size="default"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="primary"
+                  :icon="useRenderIcon('ri/search-line')"
+                  :loading="loading"
+                  @click="onSearch"
+                >
+                  搜索
+                </el-button>
+                <el-button
+                  :icon="useRenderIcon(Refresh)"
+                  @click="resetForm(formRef)"
+                >
+                  重置
+                </el-button>
+              </el-form-item>
+            </el-form>
           </div>
         </el-col>
         <el-col :span="8">
