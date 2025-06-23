@@ -16,7 +16,7 @@ export default {
       name: "Merchant",
       component: () => import("@/views/merchant/supervision/index.vue"),
       meta: {
-        title: "督导",
+        title: "商家",
         showLink: true
       }
     },
@@ -26,7 +26,7 @@ export default {
       component: () => import("@/views/merchant/errorReport/index.vue"),
       meta: {
         title: "报错记录",
-        showLink: true
+        showLink: false
       }
     },
     {
@@ -35,7 +35,7 @@ export default {
       component: () => import("@/views/merchant/declarationReport/index.vue"),
       meta: {
         title: "申报记录",
-        showLink: true
+        showLink: false
       }
     },
     {
@@ -44,7 +44,7 @@ export default {
       component: () => import("@/views/merchant/violationReport/index.vue"),
       meta: {
         title: "违规记录",
-        showLink: true
+        showLink: false
       }
     }
   ]

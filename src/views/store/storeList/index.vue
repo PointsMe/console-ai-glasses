@@ -165,7 +165,10 @@ onMounted(() => {
                 size="large"
                 type="danger"
                 @click="
-                  router.push({ name: 'ErrorReport', params: { ...row } })
+                  router.push({
+                    name: 'ErrorReport',
+                    query: { shopId: row.id }
+                  })
                 "
               >
                 {{ row.errorCount }}
@@ -175,7 +178,12 @@ onMounted(() => {
               <el-tag
                 size="large"
                 type="success"
-                @click="router.push({ name: 'DeclarationReport', params: row })"
+                @click="
+                  router.push({
+                    name: 'DeclarationReport',
+                    query: { shopId: row.id }
+                  })
+                "
               >
                 {{ row.disputeCount }}
               </el-tag>
@@ -184,7 +192,12 @@ onMounted(() => {
               <el-tag
                 size="large"
                 type="warning"
-                @click="router.push({ name: 'ViolationReport' })"
+                @click="
+                  router.push({
+                    name: 'ViolationReport',
+                    query: { shopId: row.id }
+                  })
+                "
               >
                 {{ row.violationCount }}
               </el-tag>

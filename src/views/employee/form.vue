@@ -75,7 +75,7 @@ defineExpose({ getRef });
           />
         </el-form-item>
       </el-col>
-      <el-col :span="24">
+      <el-col v-if="!newFormInline.id" :span="24">
         <el-form-item label="手机" prop="mobile">
           <el-input
             v-model="newFormInline.mobile"
@@ -88,7 +88,7 @@ defineExpose({ getRef });
           </el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="24">
+      <el-col v-if="!newFormInline.id" :span="24">
         <el-form-item label="邮箱" prop="email">
           <el-input
             v-model="newFormInline.email"

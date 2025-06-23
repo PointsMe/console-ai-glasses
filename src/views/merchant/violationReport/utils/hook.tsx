@@ -6,10 +6,12 @@ import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection } from "@pureadmin/utils";
 import { getviolationListApi, getViolationDetailApi } from "@/api/user";
 import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
+import { useRouter } from "vue-router";
 
 export function useRole(treeRef: Ref) {
+  const router = useRouter();
   const form = reactive({
-    shopId: "",
+    shopId: router.currentRoute.value.query.shopId,
     loginTime: ""
   });
   const curRow = ref();

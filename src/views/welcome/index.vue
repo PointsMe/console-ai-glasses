@@ -4,6 +4,9 @@ import { getMerchantDetail, MerchantDetailResult } from "@/api/user";
 import pieChart from "./pieChart.vue";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import listOne from "./listOne.vue";
+import listOneTwo from "./listOneTwo.vue";
+import listOneThree from "./listOneThree.vue";
 defineOptions({
   name: "User"
 });
@@ -132,6 +135,15 @@ onMounted(() => {
           </div>
         </el-col>
       </el-row>
+    </div>
+    <div class="bg-bg_color margin-top-12">
+      <listOne />
+    </div>
+    <div class="bg-bg_color margin-top-12">
+      <listOneTwo />
+    </div>
+    <div class="bg-bg_color margin-top-12">
+      <listOneThree />
     </div>
   </div>
 </template>

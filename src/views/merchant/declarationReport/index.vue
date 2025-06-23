@@ -161,7 +161,6 @@ onMounted(() => {
                 link
                 type="primary"
                 :size="size"
-                :icon="useRenderIcon(View)"
                 @click="openDialog(row)"
               >
                 回看视频
