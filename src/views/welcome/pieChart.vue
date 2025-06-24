@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useDark, useECharts } from "@pureadmin/utils";
-
-const { isDark } = useDark();
-
-const theme = computed(() => (isDark.value ? "dark" : "light"));
-
-const pieChartRef = ref();
-const { setOptions } = useECharts(pieChartRef, {
-  theme
+import { batchFormatToDateString } from "@/utils/time";
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({})
+  }
 });
-
-setOptions({
+const options = ref({
+  title: {
+    text: "总违规次数"
+  },
   xAxis: {
     type: "category",
-    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    data: []
   },
   yAxis: {
     type: "value"
   },
   series: [
     {
-      data: [120, 200, 150, 80, 70, 110, 130],
+      data: [],
       type: "bar",
       showBackground: true,
       backgroundStyle: {
@@ -30,6 +30,39 @@ setOptions({
     }
   ]
 });
+const { isDark } = useDark();
+
+const theme = computed(() => (isDark.value ? "dark" : "light"));
+
+const pieChartRef = ref();
+const { setOptions } = useECharts(pieChartRef, {
+  theme
+});
+onMounted(() => {
+  console.log("props.data==>", props.data);
+});
+watch(
+  () => props.data,
+  (newVal, oldVal) => {
+    console.log("newVal==>", newVal);
+    console.log("oldVal==>", oldVal);
+    if (newVal && newVal.formerAt && newVal.latterAt) {
+      const category = batchFormatToDateString(newVal.formerAt);
+      const categoryLatter = batchFormatToDateString(newVal.latterAt);
+      console.log("category==>", category);
+      console.log("categoryLatter==>", categoryLatter);
+      options.value.xAxis.data = [category.join("~"), categoryLatter.join("~")];
+      options.value.series[0].data = [
+        newVal.summary.former,
+        newVal.summary.latter
+      ];
+      setOptions(options.value as any);
+    }
+  },
+  {
+    immediate: true
+  }
+);
 </script>
 
 <template>

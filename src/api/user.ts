@@ -265,3 +265,6 @@ export const deleteEmployeeApi = (data?: object) => {
 export const getMerchantLoginLog = (data?: object) => {
   return http.request<any>("post", "/violation/stats/kind", { data });
 };
+export const getViolationCompare = (data?: object) => {
+  return http.request<any>("post", "/violation/compare", { data });
+};

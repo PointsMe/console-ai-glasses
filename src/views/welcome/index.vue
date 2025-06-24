@@ -4,32 +4,40 @@ import {
   getMerchantDetail,
   MerchantDetailResult,
   selectorShop,
-  getMerchantLoginLog
+  getViolationCompare
 } from "@/api/user";
-import pieChart from "./pieChart.vue";
+import PieChart from "./pieChart.vue";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import listOne from "./listOne.vue";
 import listOneTwo from "./listOneTwo.vue";
 import listOneThree from "./listOneThree.vue";
-import { getPickerShortcuts } from "@/views/merchant/utils";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { convertISOToTimezoneFormat } from "@/utils/time";
 defineOptions({
   name: "User"
 });
-import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
-import View from "~icons/ep/view";
+import PieChartTwo from "./pieChartTwo.vue";
+import PieChartThree from "./pieChartThree.vue";
 const formRef = ref();
 const router = useRouter();
 const form = ref({
   shopId: "",
-  startTimeArray: [],
-  endTimeArray: []
-  // loginTime: [dayjs().subtract(1, "month").toDate(), dayjs().toDate()]
+  startTimeArray: [
+    dayjs().subtract(1, "month").startOf("month").toDate(),
+    dayjs().subtract(1, "month").endOf("month").toDate()
+  ],
+  endTimeArray: [
+    dayjs().subtract(0, "month").startOf("month").toDate(),
+    dayjs().subtract(0, "month").endOf("month").toDate()
+  ]
 });
 const loading = ref(false);
 const shopList = ref([]);
+const compareDataOne = ref();
+const compareDataTwo = ref();
+const compareDataThree = ref();
 const dataValue = ref<MerchantDetailResult>();
 const resetForm = formEl => {
   if (!formEl) return;
@@ -38,6 +46,7 @@ const resetForm = formEl => {
 };
 const onSearch = () => {
   console.log("onSearch", form.value);
+  getMerchantLoginLogFn();
 };
 const getMerchantDetailFn = async () => {
   const { data } = await getMerchantDetail();
@@ -51,18 +60,44 @@ const getShopList = async () => {
   shopList.value = data;
 };
 const getMerchantLoginLogFn = async () => {
-  const { data } = await getMerchantLoginLog({
+  const { data } = await getViolationCompare({
     shopId: form.value.shopId,
-    formerStartAt: form.value.startTimeArray[0],
-    formerEndAt: form.value.startTimeArray[1],
-    latterStartAt: form.value.endTimeArray[0],
-    latterEndAt: form.value.endTimeArray[1]
+    formerStartAt: convertISOToTimezoneFormat(
+      form.value.startTimeArray[0].toISOString()
+    ),
+    formerEndAt: convertISOToTimezoneFormat(
+      form.value.startTimeArray[1].toISOString()
+    ),
+    latterStartAt: convertISOToTimezoneFormat(
+      form.value.endTimeArray[0].toISOString()
+    ),
+    latterEndAt: convertISOToTimezoneFormat(
+      form.value.endTimeArray[1].toISOString()
+    )
   });
+  if (data) {
+    compareDataOne.value = {
+      summary: data.summary,
+      formerAt: form.value.startTimeArray,
+      latterAt: form.value.endTimeArray
+    };
+    compareDataTwo.value = {
+      summary: data.kinds,
+      formerAt: form.value.startTimeArray,
+      latterAt: form.value.endTimeArray
+    };
+    compareDataThree.value = {
+      summary: data.employees,
+      formerAt: form.value.startTimeArray,
+      latterAt: form.value.endTimeArray
+    };
+  }
   console.log("getMerchantLoginLogFn==>", data);
 };
 onMounted(() => {
   Promise.all([getMerchantDetailFn(), getShopList()]).then(res => {
-    // getMerchantLoginLogFn();
+    console.log("res==>", form.value);
+    getMerchantLoginLogFn();
   });
 });
 </script>
@@ -192,29 +227,29 @@ onMounted(() => {
                 >
                   搜索
                 </el-button>
-                <el-button
+                <!-- <el-button
                   :icon="useRenderIcon(Refresh)"
                   @click="resetForm(formRef)"
                 >
                   重置
-                </el-button>
+                </el-button> -->
               </el-form-item>
             </el-form>
           </div>
         </el-col>
         <el-col :span="8">
           <div>
-            <pieChart class="echart mt-[10px]" />
+            <PieChart class="echart mt-[10px]" :data="compareDataOne" />
           </div>
         </el-col>
         <el-col :span="8">
           <div>
-            <pieChart class="echart mt-[10px]" />
+            <PieChartTwo class="echart mt-[10px]" :data="compareDataTwo" />
           </div>
         </el-col>
         <el-col :span="8">
           <div>
-            <pieChart class="echart mt-[10px]" />
+            <PieChartThree class="echart mt-[10px]" :data="compareDataThree" />
           </div>
         </el-col>
       </el-row>

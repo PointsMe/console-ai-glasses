@@ -92,7 +92,7 @@ onMounted(() => {
 
 <template>
   <div class="flex justify-between">
-    <div>报错记录(显示近一周)</div>
+    <div>报错记录(<span style="color: grey">显示近一周</span>)</div>
     <div>
       <el-button type="text" @click="toErrorRecord">查看更多</el-button>
     </div>
