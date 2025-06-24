@@ -172,7 +172,7 @@ export function useRole(treeRef: Ref) {
           formInline: {
             username: data ? data?.username : "",
             email: data ? data?.email : "",
-            shopIds: data ? data?.shops?.map(item => item.id) : "",
+            shopIds: data ? data?.shops?.map(item => item.id)[0] : "",
             mobile: data ? data?.mobile : "",
             id: data ? data?.id : ""
           }
