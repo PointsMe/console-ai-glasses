@@ -268,3 +268,6 @@ export const getMerchantLoginLog = (data?: object) => {
 export const getViolationCompare = (data?: object) => {
   return http.request<any>("post", "/violation/compare", { data });
 };
+export const disputeReviewApi = (data?: object) => {
+  return http.request<any>("post", "/dispute/review", { data });
+};

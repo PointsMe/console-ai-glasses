@@ -1,12 +1,17 @@
 import dayjs from "dayjs";
-import editForm from "../form.vue";
+import videoDialog from "@/components/videoDialog.vue";
 import { transformI18n } from "@/plugins/i18n";
-import { addDialog } from "@/components/ReDialog";
+import { addDialog, closeDialog } from "@/components/ReDialog";
 import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection } from "@pureadmin/utils";
-import { getDisputeListApi, getDisputeDetailApi } from "@/api/user";
+import {
+  getDisputeListApi,
+  getDisputeDetailApi,
+  disputeReviewApi
+} from "@/api/user";
 import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 
 export function useRole(treeRef: Ref) {
   const router = useRouter();
@@ -137,7 +142,7 @@ export function useRole(treeRef: Ref) {
   function openDialog(row?: any) {
     const params = new FormData();
     params.append("id", row?.id);
-    getDisputeDetailApi().then(res => {
+    getDisputeDetailApi(params).then(res => {
       const { data } = res;
       addDialog({
         title: ``,
@@ -159,15 +164,44 @@ export function useRole(treeRef: Ref) {
         fullscreen: deviceDetection(),
         fullscreenIcon: true,
         closeOnClickModal: false,
-        contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-        beforeSure: (done, { options }) => {
-          console.log(options);
-          function chores() {
-            done(); // 关闭弹框
-            // onSearch(); // 刷新表格数据
+        contentRenderer: () =>
+          h(videoDialog, { ref: formRef, formInline: null }),
+        footerButtons: [
+          {
+            label: "审核不通过",
+            size: "default",
+            type: "danger",
+            btnClick: ({ dialog: { options, index }, button }) => {
+              console.log(options, index, button);
+              disputeReviewApi({
+                id: row?.id,
+                state: 104
+              }).then((res: any) => {
+                if (res.code === 20000) {
+                  ElMessage.success("审核不通过");
+                  closeDialog(options, index);
+                }
+              });
+            }
+          },
+          {
+            label: "审核通过",
+            size: "default",
+            type: "success",
+            btnClick: ({ dialog: { options, index }, button }) => {
+              console.log(options, index, button);
+              disputeReviewApi({
+                id: row?.id,
+                state: 103
+              }).then((res: any) => {
+                if (res.code === 20000) {
+                  ElMessage.success("审核通过");
+                  closeDialog(options, index);
+                }
+              });
+            }
           }
-          chores();
-        }
+        ]
       });
     });
   }

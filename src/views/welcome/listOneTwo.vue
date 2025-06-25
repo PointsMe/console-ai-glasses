@@ -83,7 +83,7 @@ const toDeclaration = () => {
   router.push("/merchant/declarationReport");
 };
 const handleVideoPlay = (row: any) => {
-  openDialog(row);
+  openDialog(row, "declarationReport");
 };
 onMounted(() => {
   onSearch();

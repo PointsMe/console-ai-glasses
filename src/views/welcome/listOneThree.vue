@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { h, ref, onMounted, toRaw } from "vue";
-import { getviolationListApi } from "@/api/user";
+import { getDisputeListApi } from "@/api/user";
 import { useRouter } from "vue-router";
 import { useOpenDialog } from "./hooks";
 const { openDialog } = useOpenDialog();
@@ -69,7 +69,7 @@ const router = useRouter();
 const loading = ref(true);
 async function onSearch() {
   loading.value = true;
-  const { data } = await getviolationListApi({
+  const { data } = await getDisputeListApi({
     page: 1,
     size: 4,
     kind: 102
@@ -83,7 +83,7 @@ const toErrorRecord = () => {
   router.push("/merchant/errorReport");
 };
 const handleVideoPlay = (row: any) => {
-  openDialog(row);
+  openDialog(row, "errorReport");
 };
 onMounted(() => {
   onSearch();

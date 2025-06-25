@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { FormProps } from "./utils/types";
 import VideoPage from "@/components/video.vue";
-
+interface FormProps {
+  formInline: any;
+}
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     id: "",
@@ -62,6 +63,7 @@ const newFormInline = ref(props.formInline);
   .right-col {
     width: 100%;
     // min-height: 650px;
+    padding-bottom: 20px;
     .h3-top {
       margin-top: 20px;
     }

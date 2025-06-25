@@ -81,7 +81,7 @@ const toViolationReport = () => {
   router.push("/merchant/violationReport");
 };
 const handleVideoPlay = (row: any) => {
-  openDialog(row);
+  openDialog(row, "violationReport");
 };
 onMounted(() => {
   onSearch();

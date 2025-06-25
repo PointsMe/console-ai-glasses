@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import editForm from "../form.vue";
+import videoDialog from "@/components/videoDialog.vue";
 import { transformI18n } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
 import type { PaginationProps } from "@pureadmin/table";
@@ -162,7 +162,8 @@ export function useRole(treeRef: Ref) {
         fullscreen: deviceDetection(),
         fullscreenIcon: true,
         closeOnClickModal: false,
-        contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
+        contentRenderer: () =>
+          h(videoDialog, { ref: formRef, formInline: null }),
         beforeSure: (done, { options }) => {
           console.log(options);
           function chores() {
