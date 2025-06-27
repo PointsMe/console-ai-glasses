@@ -33,49 +33,63 @@ export function useOpenDialog() {
       ];
     } else if (type === "declarationReport" || type === "errorReport") {
       res = getDisputeDetailApi;
-      btns = [
-        {
-          label: "审核不通过",
-          size: "default",
-          type: "danger",
-          btnClick: ({ dialog: { options, index }, button }) => {
-            console.log(options, index, button);
-            disputeReviewApi({
-              id: row?.id,
-              state: 104
-            }).then((res: any) => {
-              if (res.code === 20000) {
-                ElMessage.success("审核不通过");
-                closeDialog(options, index);
-              }
-            });
+      if (row.supervisorState === 101) {
+        btns = [
+          {
+            label: "审核不通过",
+            size: "default",
+            type: "danger",
+            btnClick: ({ dialog: { options, index }, button }) => {
+              console.log(options, index, button);
+              disputeReviewApi({
+                id: row?.id,
+                state: 104
+              }).then((res: any) => {
+                if (res.code === 20000) {
+                  ElMessage.success("审核不通过");
+                  closeDialog(options, index);
+                }
+              });
+            }
+          },
+          {
+            label: "审核通过",
+            size: "default",
+            type: "success",
+            btnClick: ({ dialog: { options, index }, button }) => {
+              console.log(options, index, button);
+              disputeReviewApi({
+                id: row?.id,
+                state: 103
+              }).then((res: any) => {
+                if (res.code === 20000) {
+                  ElMessage.success("审核通过");
+                  closeDialog(options, index);
+                }
+              });
+            }
           }
-        },
-        {
-          label: "审核通过",
-          size: "default",
-          type: "success",
-          btnClick: ({ dialog: { options, index }, button }) => {
-            console.log(options, index, button);
-            disputeReviewApi({
-              id: row?.id,
-              state: 103
-            }).then((res: any) => {
-              if (res.code === 20000) {
-                ElMessage.success("审核通过");
-                closeDialog(options, index);
-              }
-            });
+        ];
+      } else {
+        btns = [
+          {
+            label: "确认",
+            size: "default",
+            type: "primary",
+            btnClick: ({ dialog: { options, index }, button }) => {
+              console.log(options, index, button);
+              closeDialog(options, index);
+            }
           }
-        }
-      ];
+        ];
+      }
     }
     console.log(res);
     if (res) {
       res(params).then(res => {
         const { data } = res;
         addDialog({
-          title: ``,
+          title: `视频详情`,
           props: {
             formInline: {
               id: data?.id ?? "",

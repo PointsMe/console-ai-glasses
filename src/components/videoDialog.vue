@@ -26,7 +26,7 @@ const newFormInline = ref(props.formInline);
     <el-row>
       <el-col :span="6">
         <div class="left-col">
-          <h3>回看视频</h3>
+          <h3>视频时间：</h3>
           <p>
             {{ newFormInline.startAt }}
           </p>

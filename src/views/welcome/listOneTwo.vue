@@ -56,7 +56,22 @@ const columns: TableColumnList = [
   },
   {
     label: "状态",
-    prop: "state"
+    prop: "supervisorState",
+    cellRenderer: ({ row }) => {
+      return h(
+        "span",
+        {
+          class: {
+            101: "text-grey-500",
+            103: "text-red-500",
+            104: "text-green-500"
+          }[row.supervisorState]
+        },
+        { 101: "未审核", 103: "审核不通过", 104: "审核通过" }[
+          row.supervisorState
+        ]
+      );
+    }
   },
   {
     label: "操作",
