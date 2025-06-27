@@ -8,7 +8,8 @@ import { type Ref, reactive, ref, onMounted, toRaw, h } from "vue";
 export function useRole(treeRef: Ref) {
   const form = reactive({
     number: "",
-    shopId: ""
+    shopId: "",
+    merchantId: ""
   });
   const currentPage = ref(1);
   const currentSize = ref(10);
@@ -38,19 +39,21 @@ export function useRole(treeRef: Ref) {
       label: "所属员工",
       prop: "employee",
       cellRenderer: ({ row }) => {
-        return h("div", row.employee.username);
+        return h("div", row.employee?.name);
       }
     },
-    {
-      label: "所属门店",
-      prop: "shopName"
-    },
+    // {
+    //   label: "所属门店",
+    //   prop: "shopName"
+    // },
     {
       label: "设备状态",
       prop: "enabled",
-      cellRenderer: ({ row }) => {
-        return h("div", row.enabled ? "正常" : "离线");
-      }
+      cellRenderer: ({ row, props }) => (
+        <el-tag type={row.enabled ? "success" : "danger"} size={props.size}>
+          {row.enabled ? "正常" : "离线"}
+        </el-tag>
+      )
     },
     {
       label: "创建时间",
@@ -68,7 +71,20 @@ export function useRole(treeRef: Ref) {
     },
     {
       label: "是否异常",
-      prop: "state"
+      prop: "state",
+      cellRenderer: ({ row, props }) => (
+        <el-tag
+          type={[{ 101: "success", 103: "danger" }[row.state]]}
+          size={props.size}
+        >
+          {[
+            {
+              101: "正常",
+              103: "离线"
+            }[row.state]
+          ]}
+        </el-tag>
+      )
     }
   ];
 

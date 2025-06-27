@@ -91,6 +91,8 @@ onMounted(() => {
           v-model="form.shopId"
           class="w-[380px]!"
           placeholder="请选择门店"
+          filterable
+          clearable
         >
           <el-option
             v-for="item in shopList"

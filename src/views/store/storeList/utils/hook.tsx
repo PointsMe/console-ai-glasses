@@ -42,7 +42,17 @@ export function useRole(treeRef: Ref) {
     // },
     {
       label: "门店",
-      prop: "name"
+      prop: "name",
+      cellRenderer: ({ row }) => {
+        return row.logoUrl ? (
+          <div class="flex items-center justify-center gap-2">
+            <img src={row.logoUrl} alt="logo" class="w-20 h-20" />
+            <span class="text-sm font-medium">{row.name}</span>
+          </div>
+        ) : (
+          <span class="text-sm font-medium">{row.name}</span>
+        );
+      }
     },
     {
       label: "报错次数",
@@ -150,7 +160,8 @@ export function useRole(treeRef: Ref) {
           address: row ? data?.address?.address : "",
           contactName: row ? data?.address?.contactName : "",
           contactPhone: row ? data?.address?.contactPhone : "",
-          zipcode: row ? data?.address?.zipcode : ""
+          zipcode: row ? data?.address?.zipcode : "",
+          logoUrl: row ? data?.logoUrl : ""
         }
       },
       width: "40%",
@@ -176,6 +187,8 @@ export function useRole(treeRef: Ref) {
             if (title === "新增") {
               // 实际开发先调用新增接口，再进行下面操作
               addShop({
+                logoUrl: curData.logoUrl,
+                code: curData.code,
                 name: curData.name,
                 company: {
                   ...data?.company,
@@ -192,6 +205,8 @@ export function useRole(treeRef: Ref) {
               // 实际开发先调用修改接口，再进行下面操作
               updateShop({
                 id: data?.id,
+                logoUrl: curData.logoUrl,
+                code: curData.code,
                 name: curData.name,
                 company: {
                   ...data?.company,

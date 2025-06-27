@@ -98,19 +98,13 @@ onMounted(() => {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="" prop="number">
-        <el-input
-          v-model="form.number"
-          placeholder="请输入眼镜编号"
-          clearable
-          class="w-[380px]!"
-        />
-      </el-form-item>
       <el-form-item label="" prop="shopId">
         <el-select
           v-model="form.shopId"
-          class="w-[380px]!"
+          class="w-[300px]!"
           placeholder="请选择门店"
+          filterable
+          clearable
         >
           <el-option
             v-for="item in shopList"
@@ -120,6 +114,15 @@ onMounted(() => {
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="" prop="number">
+        <el-input
+          v-model="form.number"
+          placeholder="请输入眼镜编号"
+          clearable
+          class="w-[300px]!"
+        />
+      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"

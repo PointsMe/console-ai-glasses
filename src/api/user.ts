@@ -271,3 +271,15 @@ export const getViolationCompare = (data?: object) => {
 export const disputeReviewApi = (data?: object) => {
   return http.request<any>("post", "/dispute/review", { data });
 };
+export const uploadFileApi = (data?: object) => {
+  return http.request<any>(
+    "post",
+    "/image/upload",
+    { data },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
+};
