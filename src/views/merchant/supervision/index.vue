@@ -101,7 +101,7 @@ onMounted(() => {
           v-model="form.username"
           placeholder="请输入督导姓名"
           clearable
-          class="w-[180px]!"
+          class="w-[300px]!"
         />
       </el-form-item>
       <el-form-item>
