@@ -80,7 +80,20 @@ export function useRole(treeRef: Ref) {
     },
     {
       label: "状态",
-      prop: "state"
+      prop: "state",
+      cellRenderer: ({ row }) => {
+        return h(
+          "span",
+          {
+            class: {
+              101: "text-grey-500",
+              103: "text-red-500",
+              104: "text-green-500"
+            }[row.state]
+          },
+          { 101: "未审核", 103: "违规", 104: "正常" }[row.state]
+        );
+      }
     },
     {
       label: "操作",
@@ -143,7 +156,7 @@ export function useRole(treeRef: Ref) {
     getViolationDetailApi(params).then(res => {
       const { data } = res;
       addDialog({
-        title: ``,
+        title: `视频详情`,
         props: {
           formInline: {
             id: data?.id ?? "",

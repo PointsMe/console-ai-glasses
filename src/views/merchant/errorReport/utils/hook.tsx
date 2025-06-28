@@ -80,8 +80,22 @@ export function useRole(treeRef: Ref) {
       }
     },
     {
-      label: "状态",
-      prop: "state"
+      label: "审核状态",
+      prop: "supervisorState",
+      cellRenderer: ({ row, props }) => (
+        <el-tag
+          type={[
+            { 101: "info", 103: "danger", 104: "success" }[row.supervisorState]
+          ]}
+          size={props.size}
+        >
+          {[
+            { 101: "未审核", 103: "审核不通过", 104: "审核通过" }[
+              row.supervisorState
+            ]
+          ]}
+        </el-tag>
+      )
     },
     {
       label: "操作",
@@ -145,7 +159,7 @@ export function useRole(treeRef: Ref) {
     getDisputeDetailApi(params).then(res => {
       const { data } = res;
       addDialog({
-        title: ``,
+        title: `视频详情`,
         props: {
           formInline: {
             id: data?.id ?? "",
@@ -166,42 +180,57 @@ export function useRole(treeRef: Ref) {
         closeOnClickModal: false,
         contentRenderer: () =>
           h(videoDialog, { ref: formRef, formInline: null }),
-        footerButtons: [
-          {
-            label: "审核不通过",
-            size: "default",
-            type: "danger",
-            btnClick: ({ dialog: { options, index }, button }) => {
-              console.log(options, index, button);
-              disputeReviewApi({
-                id: row?.id,
-                state: 104
-              }).then((res: any) => {
-                if (res.code === 20000) {
-                  ElMessage.success("审核不通过");
-                  closeDialog(options, index);
+        footerButtons:
+          data.supervisorState === 101
+            ? [
+                {
+                  label: "审核不通过",
+                  size: "default",
+                  type: "danger",
+                  btnClick: ({ dialog: { options, index }, button }) => {
+                    console.log(options, index, button);
+                    disputeReviewApi({
+                      id: row?.id,
+                      state: 104
+                    }).then((res: any) => {
+                      if (res.code === 20000) {
+                        ElMessage.success("审核不通过");
+                        closeDialog(options, index);
+                        onSearch();
+                      }
+                    });
+                  }
+                },
+                {
+                  label: "审核通过",
+                  size: "default",
+                  type: "success",
+                  btnClick: ({ dialog: { options, index }, button }) => {
+                    console.log(options, index, button);
+                    disputeReviewApi({
+                      id: row?.id,
+                      state: 103
+                    }).then((res: any) => {
+                      if (res.code === 20000) {
+                        ElMessage.success("审核通过");
+                        closeDialog(options, index);
+                        onSearch();
+                      }
+                    });
+                  }
                 }
-              });
-            }
-          },
-          {
-            label: "审核通过",
-            size: "default",
-            type: "success",
-            btnClick: ({ dialog: { options, index }, button }) => {
-              console.log(options, index, button);
-              disputeReviewApi({
-                id: row?.id,
-                state: 103
-              }).then((res: any) => {
-                if (res.code === 20000) {
-                  ElMessage.success("审核通过");
-                  closeDialog(options, index);
+              ]
+            : [
+                {
+                  label: "确认",
+                  size: "default",
+                  type: "primary",
+                  btnClick: ({ dialog: { options, index }, button }) => {
+                    console.log(options, index, button);
+                    closeDialog(options, index);
+                  }
                 }
-              });
-            }
-          }
-        ]
+              ]
       });
     });
   }
