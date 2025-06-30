@@ -283,3 +283,6 @@ export const uploadFileApi = (data?: object) => {
     }
   );
 };
+export const getKindList = (data?: object) => {
+  return http.request<any>("post", "/violation/kind/selector", { data });
+};

@@ -12,7 +12,8 @@ export function useRole(treeRef: Ref) {
   const router = useRouter();
   const form = reactive({
     shopId: router.currentRoute.value.query.shopId,
-    loginTime: ""
+    loginTime: "",
+    kind: ""
   });
   const curRow = ref();
   const formRef = ref();
@@ -38,13 +39,13 @@ export function useRole(treeRef: Ref) {
         return h("div", row?.shop?.name);
       }
     },
-    {
-      label: "地址信息",
-      prop: "shopId",
-      cellRenderer: ({ row }) => {
-        return h("div", row.shop.address);
-      }
-    },
+    // {
+    //   label: "地址信息",
+    //   prop: "shopId",
+    //   cellRenderer: ({ row }) => {
+    //     return h("div", row.shop.address);
+    //   }
+    // },
     {
       label: "报错时间",
       prop: "createdAt",
@@ -78,23 +79,23 @@ export function useRole(treeRef: Ref) {
         );
       }
     },
-    {
-      label: "状态",
-      prop: "state",
-      cellRenderer: ({ row }) => {
-        return h(
-          "span",
-          {
-            class: {
-              101: "text-grey-500",
-              103: "text-red-500",
-              104: "text-green-500"
-            }[row.state]
-          },
-          { 101: "未审核", 103: "违规", 104: "正常" }[row.state]
-        );
-      }
-    },
+    // {
+    //   label: "状态",
+    //   prop: "state",
+    //   cellRenderer: ({ row }) => {
+    //     return h(
+    //       "span",
+    //       {
+    //         class: {
+    //           101: "text-grey-500",
+    //           103: "text-red-500",
+    //           104: "text-green-500"
+    //         }[row.state]
+    //       },
+    //       { 101: "未审核", 103: "违规", 104: "正常" }[row.state]
+    //     );
+    //   }
+    // },
     {
       label: "操作",
       fixed: "right",

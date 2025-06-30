@@ -5,8 +5,7 @@ import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { delay, subBefore, useResizeObserver } from "@pureadmin/utils";
 import { getPickerShortcuts } from "../utils";
-import { selectorShop } from "@/api/user";
-
+import { selectorShop, getKindList } from "@/api/user";
 import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
 import View from "~icons/ep/view";
@@ -56,15 +55,22 @@ const {
   handleSelectionChange
 } = useRole(treeRef);
 const shopList = ref([]);
+const kindList = ref([]);
 const getShopList = async () => {
   const res = await selectorShop({});
   if (res) {
     shopList.value = res.data;
   }
 };
-
+const getindListFn = async () => {
+  const res = await getKindList();
+  if (res) {
+    kindList.value = res.data;
+  }
+};
 onMounted(() => {
   getShopList();
+  getindListFn();
   useResizeObserver(contentRef, async () => {
     await nextTick();
     delay(60).then(() => {
@@ -84,14 +90,32 @@ onMounted(() => {
       :model="form"
       class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="" prop="shopId">
+      <el-form-item label="门店" prop="shopId">
         <el-select
           v-model="form.shopId"
           class="w-[380px]!"
           placeholder="请选择门店"
+          clearable
+          filterable
         >
           <el-option
             v-for="item in shopList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="违规类型" prop="kind">
+        <el-select
+          v-model="form.kind"
+          class="w-[380px]!"
+          clearable
+          placeholder="请选择违规类型"
+          filterable
+        >
+          <el-option
+            v-for="item in kindList"
             :key="item.id"
             :label="item.name"
             :value="item.id"
@@ -108,7 +132,6 @@ onMounted(() => {
           end-placeholder="结束日期时间"
         />
       </el-form-item>
-
       <el-form-item>
         <el-button
           type="primary"
