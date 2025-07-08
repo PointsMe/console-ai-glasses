@@ -14,7 +14,8 @@ import NProgress from "../progress";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ElMessage } from "element-plus";
-
+import Cookies from "js-cookie";
+import { router } from "@/router";
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
   // 请求超时时间
@@ -136,6 +137,12 @@ class PureHttp {
         }
         if (response.data.code === 20000) {
           return response.data;
+        } else if (response.data.code === 40001) {
+          ElMessage.error(response.data.msg);
+          localStorage.clear();
+          Cookies.remove("authorized-token");
+          router.push("/login");
+          return Promise.reject();
         } else {
           ElMessage.error(response.data.msg);
           return Promise.reject();
