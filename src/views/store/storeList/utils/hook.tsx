@@ -50,7 +50,10 @@ export function useRole(treeRef: Ref) {
             <span class="text-sm font-medium">{row.name}</span>
           </div>
         ) : (
-          <span class="text-sm font-medium">{row.name}</span>
+          <div class="flex items-center justify-center gap-2">
+            <span class="w-20 h-20" />
+            <span class="text-sm font-medium">{row.name}</span>
+          </div>
         );
       }
     },
@@ -161,7 +164,8 @@ export function useRole(treeRef: Ref) {
           contactName: row ? data?.address?.contactName : "",
           contactPhone: row ? data?.address?.contactPhone : "",
           zipcode: row ? data?.address?.zipcode : "",
-          logoUrl: row ? data?.logoUrl : ""
+          logoUrl: row ? data?.logoUrl : "",
+          remark: row ? data?.description : ""
         }
       },
       width: "40%",
@@ -197,7 +201,8 @@ export function useRole(treeRef: Ref) {
                 },
                 address: {
                   ...curData
-                }
+                },
+                description: curData.remark
               }).then(() => {
                 chores();
               });
@@ -215,7 +220,8 @@ export function useRole(treeRef: Ref) {
                 },
                 address: {
                   ...curData
-                }
+                },
+                description: curData.remark
               }).then(() => {
                 chores();
               });

@@ -53,23 +53,23 @@ const columns: TableColumnList = [
       );
     }
   },
-  {
-    label: "状态",
-    prop: "state",
-    cellRenderer: ({ row }) => {
-      return h(
-        "span",
-        {
-          class: {
-            101: "text-grey-500",
-            103: "text-red-500",
-            104: "text-green-500"
-          }[row.state]
-        },
-        { 101: "未审核", 103: "违规", 104: "正常" }[row.state]
-      );
-    }
-  },
+  // {
+  //   label: "状态",
+  //   prop: "state",
+  //   cellRenderer: ({ row }) => {
+  //     return h(
+  //       "span",
+  //       {
+  //         class: {
+  //           101: "text-grey-500",
+  //           103: "text-red-500",
+  //           104: "text-green-500"
+  //         }[row.state]
+  //       },
+  //       { 101: "未审核", 103: "违规", 104: "正常" }[row.state]
+  //     );
+  //   }
+  // },
   {
     label: "操作",
     fixed: "right",

@@ -35,6 +35,11 @@ const getCountryList = async () => {
     shopList.value = res.data;
   }
 };
+const handleInput = (e: string) => {
+  console.log(e);
+  // 只允许输入数字，非数字字符会被移除
+  newFormInline.value.mobile = e.replace(/\D/g, "");
+};
 
 onMounted(() => {
   getCountryList();
@@ -81,6 +86,7 @@ defineExpose({ getRef });
             v-model="newFormInline.mobile"
             clearable
             placeholder="请输入手机"
+            @input="handleInput"
           >
             <template #prepend>
               <AllCountryView @changeCountry="changeCountry" />

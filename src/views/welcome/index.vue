@@ -46,6 +46,10 @@ const resetForm = formEl => {
 };
 const onSearch = () => {
   console.log("onSearch", form.value);
+  if (!form.value.shopId) {
+    ElMessage.error("请选择门店");
+    return;
+  }
   getMerchantLoginLogFn();
 };
 const getMerchantDetailFn = async () => {
@@ -53,11 +57,13 @@ const getMerchantDetailFn = async () => {
   console.log("getMerchantDetailFn==>", data);
   data.createdAt = dayjs(data.createdAt).format("YYYY-MM-DD HH:mm:ss");
   dataValue.value = data;
+  return data;
 };
 const getShopList = async () => {
   const { data } = await selectorShop();
   form.value.shopId = data[0].id;
   shopList.value = data;
+  return data;
 };
 const getMerchantLoginLogFn = async () => {
   const { data } = await getViolationCompare({
@@ -96,8 +102,10 @@ const getMerchantLoginLogFn = async () => {
 };
 onMounted(() => {
   Promise.all([getMerchantDetailFn(), getShopList()]).then(res => {
-    console.log("res==>", form.value);
-    getMerchantLoginLogFn();
+    console.log("res==>", res);
+    if (res[1] && res[1].length > 0) {
+      getMerchantLoginLogFn();
+    }
   });
 });
 </script>
@@ -169,7 +177,7 @@ onMounted(() => {
       </el-row>
     </div>
     <div class="bg-bg_color margin-top-12">
-      <el-row>
+      <el-row :gutter="24">
         <el-col :span="24">
           <div class="text-left text-lg font-bold mb-4">违规数据对比</div>
         </el-col>

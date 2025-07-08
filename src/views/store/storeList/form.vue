@@ -19,7 +19,8 @@ const props = withDefaults(defineProps<FormProps>(), {
     address: "",
     contactName: "",
     contactPhone: "",
-    zipcode: ""
+    zipcode: "",
+    remark: ""
   })
 });
 const countryList = ref([]);
@@ -191,6 +192,16 @@ defineExpose({ getRef });
             v-model="newFormInline.contactPhone"
             clearable
             placeholder="请输入电话"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="newFormInline.remark"
+            clearable
+            type="textarea"
+            placeholder="请输入备注"
           />
         </el-form-item>
       </el-col>

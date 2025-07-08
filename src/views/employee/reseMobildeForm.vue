@@ -25,6 +25,11 @@ const changeCountry = (e: string) => {
   console.log(e);
   mobile_type.value = e;
 };
+const handleInput = (e: string) => {
+  console.log(e);
+  // 只允许输入数字，非数字字符会被移除
+  newFormInline.value.mobile = e.replace(/\D/g, "");
+};
 </script>
 
 <template>
@@ -41,6 +46,7 @@ const changeCountry = (e: string) => {
             v-model="newFormInline.mobile"
             clearable
             placeholder="请输入手机号"
+            @input="handleInput"
           >
             <template #prepend>
               <AllCountryView @changeCountry="changeCountry" />

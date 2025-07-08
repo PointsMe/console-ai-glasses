@@ -85,12 +85,12 @@ export function useRole(treeRef: Ref) {
       cellRenderer: ({ row, props }) => (
         <el-tag
           type={[
-            { 101: "info", 103: "danger", 104: "success" }[row.supervisorState]
+            { 101: "info", 103: "success", 104: "danger" }[row.supervisorState]
           ]}
           size={props.size}
         >
           {[
-            { 101: "未审核", 103: "审核不通过", 104: "审核通过" }[
+            { 101: "未审核", 103: "审核通过", 104: "审核不通过" }[
               row.supervisorState
             ]
           ]}

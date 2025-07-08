@@ -63,11 +63,11 @@ const columns: TableColumnList = [
         {
           class: {
             101: "text-grey-500",
-            103: "text-red-500",
-            104: "text-green-500"
+            103: "text-green-500",
+            104: "text-red-500"
           }[row.supervisorState]
         },
-        { 101: "未审核", 103: "审核不通过", 104: "审核通过" }[
+        { 101: "未审核", 104: "审核不通过", 103: "审核通过" }[
           row.supervisorState
         ]
       );

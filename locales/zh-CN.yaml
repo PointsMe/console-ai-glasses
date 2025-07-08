@@ -61,7 +61,7 @@ panel:
   pureHiddenFooter: 隐藏页脚
   pureMultiTagsCache: 页签持久化
 menus:
-  pureHome: 首页
+  pureHome: 商家
   pureLogin: 登录
   pureAbnormal: 异常页面
   pureFourZeroFour: "404"

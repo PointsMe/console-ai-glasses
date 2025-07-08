@@ -16,7 +16,7 @@ export default {
       name: "Merchant",
       component: () => import("@/views/merchant/supervision/index.vue"),
       meta: {
-        title: "商家",
+        title: "督导",
         showLink: true
       }
     },

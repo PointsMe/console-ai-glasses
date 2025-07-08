@@ -48,7 +48,7 @@ const { t, locale, translationCh, translationEn } = useTranslationLang();
 
     <div v-if="layout === 'vertical'" class="vertical-header-right">
       <!-- 菜单搜索 -->
-      <LaySearch id="header-search" />
+      <!-- <LaySearch id="header-search" /> -->
       <!-- 国际化 -->
       <el-dropdown id="header-translation" trigger="click">
         <GlobalizationIcon

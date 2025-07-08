@@ -18,7 +18,10 @@ const options = ref({
       type: "shadow"
     }
   },
-  legend: {},
+  legend: {
+    show: true,
+    right: "right"
+  },
   grid: {
     right: "1%",
     bottom: "3%",
