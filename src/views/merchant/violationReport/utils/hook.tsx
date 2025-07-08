@@ -5,14 +5,15 @@ import { addDialog } from "@/components/ReDialog";
 import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection } from "@pureadmin/utils";
 import { getviolationListApi, getViolationDetailApi } from "@/api/user";
-import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
+import { type Ref, reactive, ref, onMounted, h } from "vue";
 import { useRouter } from "vue-router";
-
+import { convertISOToTimezoneFormat } from "@/utils/time";
 export function useRole(treeRef: Ref) {
   const router = useRouter();
   const form = reactive({
     shopId: router.currentRoute.value.query.shopId,
-    loginTime: "",
+    startTime: "",
+    endTime: "",
     kind: ""
   });
   const curRow = ref();
@@ -131,7 +132,11 @@ export function useRole(treeRef: Ref) {
   async function onSearch() {
     loading.value = true;
     const { data } = await getviolationListApi({
-      ...toRaw(form),
+      shopId: form.shopId,
+      startTime: form.startTime
+        ? convertISOToTimezoneFormat(form.startTime)
+        : "",
+      endTime: form.endTime ? convertISOToTimezoneFormat(form.endTime) : "",
       page: currentPage.value,
       size: currentSize.value
     });

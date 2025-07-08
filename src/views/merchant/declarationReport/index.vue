@@ -99,14 +99,34 @@ onMounted(() => {
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="时间" prop="code">
+      <el-form-item
+        label="开始时间"
+        prop="startTime"
+        style="margin-right: 10px"
+      >
         <el-date-picker
-          v-model="form.loginTime"
-          :shortcuts="getPickerShortcuts()"
-          type="datetimerange"
-          range-separator="至"
-          start-placeholder="开始日期时间"
-          end-placeholder="结束日期时间"
+          v-model="form.startTime"
+          type="datetime"
+          :disabled-date="
+            date =>
+              form.endTime
+                ? date.getTime() > new Date(form.endTime).getTime()
+                : false
+          "
+          placeholder="Select date and time"
+        />
+      </el-form-item>
+      <el-form-item label="~" prop="endTime">
+        <el-date-picker
+          v-model="form.endTime"
+          type="datetime"
+          :disabled-date="
+            date =>
+              form.startTime
+                ? date.getTime() < new Date(form.startTime).getTime()
+                : false
+          "
+          placeholder="Select date and time"
         />
       </el-form-item>
 
