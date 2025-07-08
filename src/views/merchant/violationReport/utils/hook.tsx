@@ -54,7 +54,7 @@ export function useRole(treeRef: Ref) {
         dayjs(createdAt).format("YYYY-MM-DD HH:mm:ss")
     },
     {
-      label: "员工编号",
+      label: "员工姓名",
       prop: "employee",
       cellRenderer: ({ row }) => {
         return h("div", row.employee.name);
