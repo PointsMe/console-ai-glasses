@@ -134,10 +134,8 @@ export function useRole(treeRef: Ref) {
     loading.value = true;
     const { data } = await getDisputeListApi({
       shopId: form.shopId,
-      startTime: form.startTime
-        ? convertISOToTimezoneFormat(form.startTime)
-        : "",
-      endTime: form.endTime ? convertISOToTimezoneFormat(form.endTime) : "",
+      startAt: form.startTime ? convertISOToTimezoneFormat(form.startTime) : "",
+      endAt: form.endTime ? convertISOToTimezoneFormat(form.endTime) : "",
       page: currentPage.value,
       size: currentSize.value,
       kind: 102
