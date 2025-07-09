@@ -286,3 +286,6 @@ export const uploadFileApi = (data?: object) => {
 export const getKindList = (data?: object) => {
   return http.request<any>("post", "/violation/kind/selector", { data });
 };
+export const openDisabledApi = (data?: object) => {
+  return http.request<any>("post", "/employee/enabled/update", { data });
+};

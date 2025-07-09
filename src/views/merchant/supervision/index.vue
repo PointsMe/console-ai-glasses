@@ -165,6 +165,7 @@ onMounted(() => {
               <el-button
                 class="reset-margin"
                 link
+                :disabled="row.owner"
                 type="primary"
                 size="default"
                 @click="openDialogOne(row)"
@@ -174,6 +175,7 @@ onMounted(() => {
               <el-button
                 class="reset-margin"
                 link
+                :disabled="row.owner"
                 type="primary"
                 size="default"
                 @click="openDialogTwo(row)"
@@ -183,6 +185,7 @@ onMounted(() => {
               <el-button
                 class="reset-margin"
                 link
+                :disabled="row.owner"
                 type="primary"
                 size="default"
                 @click="openDialogThree(row)"
@@ -192,6 +195,7 @@ onMounted(() => {
               <el-button
                 class="reset-margin"
                 link
+                :disabled="row.owner"
                 type="primary"
                 size="default"
                 @click="openDialog('修改', row)"
@@ -201,6 +205,7 @@ onMounted(() => {
               <el-button
                 class="reset-margin"
                 link
+                :disabled="row.owner"
                 type="primary"
                 :size="size"
                 @click="deleteEmployee(row)"

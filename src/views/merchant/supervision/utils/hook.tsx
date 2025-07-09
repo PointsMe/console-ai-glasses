@@ -18,14 +18,17 @@ import {
   resetPasswordApi,
   resetMobileApi,
   resetEmailApi,
-  deleteEmployeeApi
+  deleteEmployeeApi,
+  openDisabledApi
 } from "@/api/user";
 import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
+import { usePublicHooks } from "@/hooks/publicHooks";
 
 export function useRole(treeRef: Ref) {
   const form = reactive({
     username: ""
   });
+  const { switchStyle } = usePublicHooks();
   const currentPage = ref(1);
   const currentSize = ref(10);
   const curRow = ref();
@@ -36,6 +39,7 @@ export function useRole(treeRef: Ref) {
   const treeSearchValue = ref();
   const isExpandAll = ref(false);
   const isSelectAll = ref(false);
+  const switchLoadMap = ref({});
   const pagination = reactive<PaginationProps>({
     total: 0,
     pageSize: 10,
@@ -67,6 +71,24 @@ export function useRole(treeRef: Ref) {
       prop: "email"
     },
     {
+      label: "状态",
+      cellRenderer: scope => (
+        <el-switch
+          size={scope.props.size === "small" ? "small" : "default"}
+          loading={switchLoadMap.value[scope.index]?.loading}
+          v-model={scope.row.owner}
+          active-value={true}
+          inactive-value={false}
+          active-text="已启用"
+          inactive-text="已停用"
+          inline-prompt
+          style={switchStyle.value}
+          onChange={() => onChange(scope as any)}
+        />
+      ),
+      minWidth: 90
+    },
+    {
       label: "创建时间",
       prop: "createdAt",
       minWidth: 160,
@@ -80,7 +102,55 @@ export function useRole(treeRef: Ref) {
       slot: "operation"
     }
   ];
-
+  function onChange({ row, index }) {
+    ElMessageBox.confirm(
+      `确认要<strong>${
+        row.owner ? "停用" : "启用"
+      }</strong><strong style='color:var(--el-color-primary)'>${
+        row.name
+      }</strong>吗?`,
+      "系统提示",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        dangerouslyUseHTMLString: true,
+        draggable: true
+      }
+    )
+      .then(async () => {
+        try {
+          switchLoadMap.value[index] = Object.assign(
+            {},
+            switchLoadMap.value[index],
+            {
+              loading: true
+            }
+          );
+          await openDisabledApi({
+            id: row.id,
+            enabled: row.owner
+          });
+          message(`已${row.owner ? "停用" : "启用"}${row.name}`, {
+            type: "success"
+          });
+          switchLoadMap.value[index] = Object.assign(
+            {},
+            switchLoadMap.value[index],
+            {
+              loading: false
+            }
+          );
+          onSearch();
+        } catch (e) {
+          console.log(e);
+          row.owner ? (row.owner = true) : (row.owner = false);
+        }
+      })
+      .catch(() => {
+        row.owner ? (row.owner = true) : (row.owner = false);
+      });
+  }
   function handleSizeChange(val: number) {
     console.log(`${val} items per page`);
     currentSize.value = val;
