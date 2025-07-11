@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import VideoPage from "@/components/video.vue";
+import VideoPageFlv from "@/components/videoFlv.vue";
 interface FormProps {
   formInline: any;
 }
@@ -41,8 +42,22 @@ const newFormInline = ref(props.formInline);
         </div>
       </el-col>
       <el-col :span="18">
-        <div class="right-col">
+        <div
+          v-if="newFormInline.fileUrl.indexOf('.mp4') > -1"
+          class="right-col"
+        >
           <VideoPage
+            :form-inline="{
+              fileUrl: newFormInline.fileUrl,
+              logoUrl: newFormInline.logoUrl
+            }"
+          />
+        </div>
+        <div
+          v-if="newFormInline.fileUrl.indexOf('.flv') > -1"
+          class="right-col"
+        >
+          <VideoPageFlv
             :form-inline="{
               fileUrl: newFormInline.fileUrl,
               logoUrl: newFormInline.logoUrl

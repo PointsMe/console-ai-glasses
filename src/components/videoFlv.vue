@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { deviceDetection } from "@pureadmin/utils";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import VideoPlay from "~icons/ep/video-play";
+import FlvPlugin from "xgplayer-flv";
 interface FormProps {
   formInline: any;
 }
@@ -34,6 +35,7 @@ onMounted(() => {
     // url: "//lf3-static.bytednsdoc.com/obj/eden-cn/nupenuvpxnuvo/xgplayer_doc/xgplayer-demo.mp4",
     url: newFormInline.value.fileUrl,
     poster: newFormInline.value.logoUrl,
+    plugins: [FlvPlugin],
     // poster:
     //   "//lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/byted-player-videos/1.0.0/poster.jpg",
     fluid: deviceDetection(),
