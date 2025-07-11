@@ -17,8 +17,8 @@ export function useRole(treeRef: Ref) {
   const router = useRouter();
   const form = reactive({
     shopId: router.currentRoute.value.query.shopId,
-    startTime: "",
-    endTime: ""
+    startTime: dayjs().subtract(1, "week").startOf("day").toISOString(),
+    endTime: dayjs().endOf("day").toISOString()
   });
   const curRow = ref();
   const formRef = ref();
@@ -62,11 +62,11 @@ export function useRole(treeRef: Ref) {
     },
     {
       label: "违规标题",
-      prop: "title"
+      prop: "violation.title"
     },
     {
       label: "违规动作描述",
-      prop: "content"
+      prop: "violation.content"
     },
     {
       label: "时间区间",

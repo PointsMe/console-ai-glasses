@@ -76,7 +76,7 @@ export function useRole(treeRef: Ref) {
         <el-switch
           size={scope.props.size === "small" ? "small" : "default"}
           loading={switchLoadMap.value[scope.index]?.loading}
-          v-model={scope.row.owner}
+          v-model={scope.row.enabled}
           active-value={true}
           inactive-value={false}
           active-text="已启用"
@@ -105,9 +105,9 @@ export function useRole(treeRef: Ref) {
   function onChange({ row, index }) {
     ElMessageBox.confirm(
       `确认要<strong>${
-        row.owner ? "停用" : "启用"
+        row.enabled ? "启用" : "停用"
       }</strong><strong style='color:var(--el-color-primary)'>${
-        row.name
+        row.username
       }</strong>吗?`,
       "系统提示",
       {
@@ -129,9 +129,9 @@ export function useRole(treeRef: Ref) {
           );
           await openDisabledApi({
             id: row.id,
-            enabled: row.owner
+            enabled: row.enabled
           });
-          message(`已${row.owner ? "停用" : "启用"}${row.name}`, {
+          message(`已${row.enabled ? "启用" : "停用"}${row.username}`, {
             type: "success"
           });
           switchLoadMap.value[index] = Object.assign(
@@ -144,11 +144,11 @@ export function useRole(treeRef: Ref) {
           onSearch();
         } catch (e) {
           console.log(e);
-          row.owner ? (row.owner = true) : (row.owner = false);
+          row.enabled ? (row.enabled = false) : (row.enabled = true);
         }
       })
       .catch(() => {
-        row.owner ? (row.owner = true) : (row.owner = false);
+        row.enabled ? (row.enabled = false) : (row.enabled = true);
       });
   }
 
@@ -291,7 +291,7 @@ export function useRole(treeRef: Ref) {
                   scope: 102,
                   username: curData.username,
                   email: curData.email,
-                  enabled: true,
+                  enabled: data.enabled,
                   mobile: `${FormRef.mobile_type.replace("+", "")}-${curData.mobile}`,
                   password: curData.password,
                   shopIds: [curData.shopIds],

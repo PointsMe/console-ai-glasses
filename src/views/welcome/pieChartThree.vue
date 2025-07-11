@@ -40,7 +40,7 @@ const options = ref({
     axisLabel: {
       rotate: 45
     },
-    data: ["Brazil", "Indonesia", "USA", "India", "China", "World"]
+    data: []
   },
   yAxis: {
     type: "value",
@@ -69,14 +69,14 @@ const options = ref({
   // ],
   series: [
     {
-      name: "2011",
+      name: "",
       type: "bar",
-      data: [18203, 23489, 29034, 104970, 131744, 630230]
+      data: []
     },
     {
-      name: "2012",
+      name: "",
       type: "bar",
-      data: [19325, 23438, 31000, 121594, 134141, 681807]
+      data: []
     }
   ]
 });

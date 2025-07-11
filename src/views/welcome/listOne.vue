@@ -4,6 +4,7 @@ import { h, ref, onMounted, toRaw } from "vue";
 import { getviolationListApi } from "@/api/user";
 import { useRouter } from "vue-router";
 import { useOpenDialog } from "./hooks";
+import { convertISOToTimezoneFormat } from "@/utils/time";
 const tableData = ref([]);
 const { openDialog } = useOpenDialog();
 const columns: TableColumnList = [
@@ -82,6 +83,10 @@ const loading = ref(true);
 async function onSearch() {
   loading.value = true;
   const { data } = await getviolationListApi({
+    startAt: convertISOToTimezoneFormat(
+      dayjs().subtract(1, "week").startOf("day").toISOString()
+    ),
+    endAt: convertISOToTimezoneFormat(dayjs().endOf("day").toISOString()),
     page: 1,
     size: 4
   });

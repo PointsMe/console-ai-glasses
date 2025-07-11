@@ -24,14 +24,10 @@ const formRef = ref();
 const router = useRouter();
 const form = ref({
   shopId: "",
-  startTimeArray: [
-    dayjs().subtract(1, "month").startOf("month").toDate(),
-    dayjs().subtract(1, "month").endOf("month").toDate()
-  ],
-  endTimeArray: [
-    dayjs().subtract(0, "month").startOf("month").toDate(),
-    dayjs().subtract(0, "month").endOf("month").toDate()
-  ]
+  formerStartAt: dayjs().subtract(1, "month").startOf("month").toDate(),
+  formerEndAt: dayjs().subtract(1, "month").endOf("month").toDate(),
+  latterStartAt: dayjs().subtract(0, "month").startOf("month").toDate(),
+  latterEndAt: dayjs().subtract(0, "month").endOf("month").toDate()
 });
 const loading = ref(false);
 const shopList = ref([]);
@@ -68,34 +64,26 @@ const getShopList = async () => {
 const getMerchantLoginLogFn = async () => {
   const { data } = await getViolationCompare({
     shopId: form.value.shopId,
-    formerStartAt: convertISOToTimezoneFormat(
-      form.value.startTimeArray[0].toISOString()
-    ),
-    formerEndAt: convertISOToTimezoneFormat(
-      form.value.startTimeArray[1].toISOString()
-    ),
-    latterStartAt: convertISOToTimezoneFormat(
-      form.value.endTimeArray[0].toISOString()
-    ),
-    latterEndAt: convertISOToTimezoneFormat(
-      form.value.endTimeArray[1].toISOString()
-    )
+    formerStartAt: convertISOToTimezoneFormat(form.value.formerStartAt),
+    formerEndAt: convertISOToTimezoneFormat(form.value.formerEndAt),
+    latterStartAt: convertISOToTimezoneFormat(form.value.latterStartAt),
+    latterEndAt: convertISOToTimezoneFormat(form.value.latterEndAt)
   });
   if (data) {
     compareDataOne.value = {
       summary: data.summary,
-      formerAt: form.value.startTimeArray,
-      latterAt: form.value.endTimeArray
+      formerAt: [form.value.formerStartAt, form.value.formerEndAt],
+      latterAt: [form.value.latterStartAt, form.value.latterEndAt]
     };
     compareDataTwo.value = {
       summary: data.kinds,
-      formerAt: form.value.startTimeArray,
-      latterAt: form.value.endTimeArray
+      formerAt: [form.value.formerStartAt, form.value.formerEndAt],
+      latterAt: [form.value.latterStartAt, form.value.latterEndAt]
     };
     compareDataThree.value = {
       summary: data.employees,
-      formerAt: form.value.startTimeArray,
-      latterAt: form.value.endTimeArray
+      formerAt: [form.value.formerStartAt, form.value.formerEndAt],
+      latterAt: [form.value.latterStartAt, form.value.latterEndAt]
     };
   }
   console.log("getMerchantLoginLogFn==>", data);
@@ -187,7 +175,7 @@ onMounted(() => {
               ref="formRef"
               :inline="true"
               :model="form"
-              label-width="40px"
+              label-width="80px"
               class="search-form bg-bg_color w-full pl-8 pt-[12px] overflow-auto"
             >
               <el-form-item label="" prop="shopId">
@@ -204,28 +192,73 @@ onMounted(() => {
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item label="">
+              <el-form-item
+                label=""
+                prop="formerStartAt"
+                style="margin-right: -50px"
+              >
                 <el-date-picker
-                  v-model="form.startTimeArray"
-                  style="width: 100%"
-                  type="daterange"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  size="default"
+                  v-model="form.formerStartAt"
+                  type="datetime"
+                  :disabled-date="
+                    date =>
+                      form.formerEndAt
+                        ? date.getTime() > new Date(form.formerEndAt).getTime()
+                        : false
+                  "
+                  placeholder="请选择开始时间"
                 />
               </el-form-item>
-              <el-form-item label="对比">
+              <el-form-item
+                label="~"
+                prop="formerEndAt"
+                style="margin-right: -30px"
+              >
                 <el-date-picker
-                  v-model="form.endTimeArray"
-                  style="margin-left: 10px"
-                  type="daterange"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  size="default"
+                  v-model="form.formerEndAt"
+                  type="datetime"
+                  :disabled-date="
+                    date =>
+                      form.formerStartAt
+                        ? date.getTime() <
+                          new Date(form.formerStartAt).getTime()
+                        : false
+                  "
+                  placeholder="请选择结束时间"
                 />
               </el-form-item>
+              <el-form-item
+                label="对比"
+                prop="latterStartAt"
+                style="margin-right: -50px"
+              >
+                <el-date-picker
+                  v-model="form.latterStartAt"
+                  type="datetime"
+                  :disabled-date="
+                    date =>
+                      form.latterEndAt
+                        ? date.getTime() > new Date(form.latterEndAt).getTime()
+                        : false
+                  "
+                  placeholder="请选择开始时间"
+                />
+              </el-form-item>
+              <el-form-item label="~" prop="latterEndAt">
+                <el-date-picker
+                  v-model="form.latterEndAt"
+                  type="datetime"
+                  :disabled-date="
+                    date =>
+                      form.latterStartAt
+                        ? date.getTime() <
+                          new Date(form.latterStartAt).getTime()
+                        : false
+                  "
+                  placeholder="请选择结束时间"
+                />
+              </el-form-item>
+
               <el-form-item>
                 <el-button
                   type="primary"

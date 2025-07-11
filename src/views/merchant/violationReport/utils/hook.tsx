@@ -136,7 +136,8 @@ export function useRole(treeRef: Ref) {
       startAt: form.startTime ? convertISOToTimezoneFormat(form.startTime) : "",
       endAt: form.endTime ? convertISOToTimezoneFormat(form.endTime) : "",
       page: currentPage.value,
-      size: currentSize.value
+      size: currentSize.value,
+      kind: form.kind
     });
     dataList.value = data.list;
     pagination.total = data.total;

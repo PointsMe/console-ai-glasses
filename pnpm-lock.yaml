@@ -83,6 +83,9 @@ importers:
       vue-types:
         specifier: ^6.0.0
         version: 6.0.0(vue@3.5.13(typescript@5.8.3))
+      xgplayer-flv:
+        specifier: ^3.0.22
+        version: 3.0.22(core-js@3.43.0)(xgplayer@3.0.22(core-js@3.43.0))
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.8.0
@@ -362,6 +365,10 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
+
+  '@babel/runtime@7.27.6':
+    resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.0':
     resolution: {integrity: sha512-2ncevenBqXI6qRMukPlXwHKHchC7RyMuu4xv5JBXRfOGVcTy1mXCD12qrp7Jsoxll1EV3+9sE4GugBVRjT2jFA==}
@@ -1707,6 +1714,11 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
+  concat-typed-array@1.0.2:
+    resolution: {integrity: sha512-aC878bxeWSlrY6h60cCDwBUXpKwovZrB7+C4+VHNO1CIXW2gBLxbQ757jWtOXUscLGgYI8R84N6uy9fTJPe+0g==}
+    engines: {node: '>=0.10.0'}
+    deprecated: 'WARNING: This package has been renamed to typed-array-concat.'
+
   confbox@0.1.8:
     resolution: {integrity: sha512-RMtmw0iFkeR4YV+fUOSucriAQNb9g8zFR52MWCtl+cCZOFRNL6zeB395vPzFhEjjn4fMxXudmELnl/KF/WrK6w==}
 
@@ -1760,6 +1772,9 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
+
+  crypto-es@1.2.7:
+    resolution: {integrity: sha512-UUqiVJ2gUuZFmbFsKmud3uuLcNP2+Opt+5ysmljycFCyhA0+T16XJmo1ev/t5kMChMqWh7IEvURNCqsg+SjZGQ==}
 
   css-declaration-sorter@7.2.0:
     resolution: {integrity: sha512-h70rUM+3PNFuaBDTLe8wF/cdWu+dOZmb7pJt8Z2sedYbAcQVQV/tEchueg3GWxwqS0cxtbxmaHEdkNACqcvsow==}
@@ -3872,8 +3887,24 @@ packages:
     resolution: {integrity: sha512-+QU2zd6OTD8XWIJCbffaiQeH9U73qIqafo1x6V1snCWYGJf6cVE0cDR4D8xRzcEnfI21IFrUPzPGtcPf8AC+Rw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
+  xgplayer-flv@3.0.22:
+    resolution: {integrity: sha512-Zyz/c4WJh4z9QGgBaFfr5Jta1YULowsDYHSROz9slYv9a7GSrZqN8Q7J8oQkmeahHzgabbrSU6zJPdaeuaqTyQ==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+      xgplayer: '>=3.0.1'
+
+  xgplayer-streaming-shared@3.0.22:
+    resolution: {integrity: sha512-LXyVRSXiwM7C7csDs7Xvgjm9O4FdqrVPfRa3sNu45G1Z9sR9K4SdOpNSYKAa0/XEgkD6oYPAdS7Z2+r64u1YWQ==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+
   xgplayer-subtitles@3.0.22:
     resolution: {integrity: sha512-2XjamtZnWS/r4QjesOC34JmuGD3QPbgeqkI4t5Gq19dN1CWNBP7nJ8pbGLuAeHswKjGg8LFRpnsic7xjc/XSyA==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+
+  xgplayer-transmuxer@3.0.22:
+    resolution: {integrity: sha512-skbw2PW6rZNlaZKxEHu6nyMsGsr/4emONWDKb4FAdSCXc2aodYRHTfn5+Xvr/VaPSxRBXOd6K1p+fGNsu6GH0g==}
     peerDependencies:
       core-js: '>=3.12.1'
 
@@ -4076,6 +4107,8 @@ snapshots:
       '@babel/plugin-syntax-typescript': 7.25.9(@babel/core@7.26.10)
     transitivePeerDependencies:
       - supports-color
+
+  '@babel/runtime@7.27.6': {}
 
   '@babel/template@7.27.0':
     dependencies:
@@ -5390,6 +5423,8 @@ snapshots:
 
   concat-map@0.0.1: {}
 
+  concat-typed-array@1.0.2: {}
+
   confbox@0.1.8: {}
 
   confbox@0.2.2: {}
@@ -5441,6 +5476,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  crypto-es@1.2.7: {}
 
   css-declaration-sorter@7.2.0(postcss@8.5.3):
     dependencies:
@@ -7586,10 +7623,30 @@ snapshots:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
 
+  xgplayer-flv@3.0.22(core-js@3.43.0)(xgplayer@3.0.22(core-js@3.43.0)):
+    dependencies:
+      core-js: 3.43.0
+      eventemitter3: 4.0.7
+      xgplayer: 3.0.22(core-js@3.43.0)
+      xgplayer-streaming-shared: 3.0.22(core-js@3.43.0)
+      xgplayer-transmuxer: 3.0.22(core-js@3.43.0)
+
+  xgplayer-streaming-shared@3.0.22(core-js@3.43.0):
+    dependencies:
+      core-js: 3.43.0
+      eventemitter3: 4.0.7
+
   xgplayer-subtitles@3.0.22(core-js@3.43.0):
     dependencies:
       core-js: 3.43.0
       eventemitter3: 4.0.7
+
+  xgplayer-transmuxer@3.0.22(core-js@3.43.0):
+    dependencies:
+      '@babel/runtime': 7.27.6
+      concat-typed-array: 1.0.2
+      core-js: 3.43.0
+      crypto-es: 1.2.7
 
   xgplayer@3.0.22(core-js@3.43.0):
     dependencies:

@@ -14,6 +14,7 @@ import {
   updateShop
 } from "@/api/user";
 import { type Ref, reactive, ref, onMounted, h, toRaw } from "vue";
+import { PictureFilled } from "@element-plus/icons-vue";
 
 export function useRole(treeRef: Ref) {
   const form = reactive({
@@ -36,26 +37,43 @@ export function useRole(treeRef: Ref) {
     background: true
   });
   const columns: TableColumnList = [
-    // {
-    //   label: "角色编号",
-    //   prop: "id"
-    // },
     {
-      label: "门店",
-      prop: "name",
+      label: "门店logo",
+      prop: "logoUrl",
       cellRenderer: ({ row }) => {
         return row.logoUrl ? (
-          <div class="flex items-center justify-center gap-2">
-            <img src={row.logoUrl} alt="logo" class="w-20 h-20" />
-            <span class="text-sm font-medium">{row.name}</span>
-          </div>
+          <img
+            src={row.logoUrl}
+            alt="logo"
+            style="width: 100px; height: 100px;"
+          />
         ) : (
-          <div class="flex items-center justify-center gap-2">
-            <span class="w-20 h-20" />
-            <span class="text-sm font-medium">{row.name}</span>
-          </div>
+          <el-icon class="text-2xl">
+            <PictureFilled />
+          </el-icon>
         );
       }
+    },
+    {
+      label: "门店",
+      prop: "name"
+      // cellRenderer: ({ row }) => {
+      //   return row.logoUrl ? (
+      //     <div class="text-center">
+      //       <img
+      //         src={row.logoUrl}
+      //         alt="logo"
+      //         style="width: 100px; height: 100px;"
+      //       />
+      //       <span class="text-sm font-medium">{row.name}</span>
+      //     </div>
+      //   ) : (
+      //     <div class="flex items-center justify-center gap-2">
+      //       <span class="w-20 h-20" />
+      //       <span class="text-sm font-medium">{row.name}</span>
+      //     </div>
+      //   );
+      // }
     },
     {
       label: "报错次数",

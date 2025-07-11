@@ -4,6 +4,7 @@ import { h, ref, onMounted, toRaw } from "vue";
 import { getDisputeListApi } from "@/api/user";
 import { useRouter } from "vue-router";
 import { useOpenDialog } from "./hooks";
+import { convertISOToTimezoneFormat } from "@/utils/time";
 const { openDialog } = useOpenDialog();
 const tableData = ref([]);
 
@@ -36,11 +37,11 @@ const columns: TableColumnList = [
   },
   {
     label: "违规标题",
-    prop: "reason"
+    prop: "violation.title"
   },
   {
     label: "违规动作描述",
-    prop: "remark"
+    prop: "violation.content"
   },
   {
     label: "时间区间",
@@ -85,6 +86,10 @@ const loading = ref(true);
 async function onSearch() {
   loading.value = true;
   const { data } = await getDisputeListApi({
+    startAt: convertISOToTimezoneFormat(
+      dayjs().subtract(1, "week").startOf("day").toISOString()
+    ),
+    endAt: convertISOToTimezoneFormat(dayjs().endOf("day").toISOString()),
     page: 1,
     size: 4,
     kind: 101

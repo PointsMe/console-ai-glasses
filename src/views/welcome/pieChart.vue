@@ -12,6 +12,21 @@ const options = ref({
   title: {
     text: "总违规次数"
   },
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "shadow"
+    }
+  },
+  legend: {
+    show: true,
+    right: "right"
+  },
+  grid: {
+    right: "1%",
+    bottom: "3%",
+    containLabel: true
+  },
   xAxis: {
     type: "category",
     data: []

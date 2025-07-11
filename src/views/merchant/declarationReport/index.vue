@@ -113,7 +113,7 @@ onMounted(() => {
                 ? date.getTime() > new Date(form.endTime).getTime()
                 : false
           "
-          placeholder="Select date and time"
+          placeholder="请选择开始时间"
         />
       </el-form-item>
       <el-form-item label="~" prop="endTime">
@@ -126,7 +126,7 @@ onMounted(() => {
                 ? date.getTime() < new Date(form.startTime).getTime()
                 : false
           "
-          placeholder="Select date and time"
+          placeholder="请选择结束时间"
         />
       </el-form-item>
 
